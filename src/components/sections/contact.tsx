@@ -30,7 +30,7 @@ export function ContactSection() {
     if (state?.success === true) {
       toast({
         title: "Sucesso!",
-        description: `${state.message} (Prioridade: ${state.priorityScore}/10)`,
+        description: state.message,
       });
       formRef.current?.reset();
     } else if (state?.success === false && state.message) {
