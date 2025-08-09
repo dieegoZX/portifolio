@@ -239,14 +239,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
   return (
     <div
       ref={container}
-      className="relative w-full h-full"
+      className="absolute top-0 right-0 transform translate-x-[5%] origin-top-right perspective-[900px] overflow-visible max-[768px]:translate-x-[25%] max-[768px]:scale-[0.75] max-[480px]:translate-x-[25%] max-[480px]:scale-[0.55]"
+      style={{ width, height }}
     >
-      <div 
-        className="absolute top-0 right-0 transform translate-x-[5%] origin-top-right perspective-[900px] overflow-visible max-[768px]:translate-x-[25%] max-[768px]:scale-[0.75] max-[480px]:translate-x-[25%] max-[480px]:scale-[0.55]"
-        style={{ width, height }}
-      >
-        {rendered}
-      </div>
+      {rendered}
     </div>
   );
 };
