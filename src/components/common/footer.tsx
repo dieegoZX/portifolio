@@ -1,14 +1,21 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import { Github, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 
 export function AppFooter() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="border-t py-6 md:py-8">
       <div className="container flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
         <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-          © {currentYear} Diego Ruan. Todos os direitos reservados.
+          © {currentYear || new Date().getFullYear()} Diego Ruan. Todos os direitos reservados.
         </p>
         <div className="flex items-center gap-4">
           <Link href="#" target="_blank" rel="noreferrer" aria-label="Github">
