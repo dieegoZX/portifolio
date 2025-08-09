@@ -10,7 +10,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 2%;
     --popover-foreground: 0 0% 98%;
-    --primary: 39 100% 50%; /* Vibrant Orange */
+    --primary: 20 95% 55%; /* Fire Orange */
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 353 43% 31%; /* Wine Red */
     --secondary-foreground: 0 0% 98%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 39 100% 50%;
+    --ring: 20 95% 55%;
     --radius: 0.5rem;
   }
 
@@ -33,7 +33,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 2%;
     --popover-foreground: 0 0% 98%;
-    --primary: 39 100% 50%;
+    --primary: 20 95% 55%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 353 43% 31%;
     --secondary-foreground: 0 0% 98%;
@@ -45,7 +45,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 39 100% 50%;
+    --ring: 20 95% 55%;
   }
 }
 
