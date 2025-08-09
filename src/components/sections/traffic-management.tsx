@@ -1,4 +1,4 @@
-import { Target, TrendingUp, BarChart, Facebook, Bot } from 'lucide-react';
+import { Target, TrendingUp, BarChart, Bot } from 'lucide-react';
 
 const services = [
   {
