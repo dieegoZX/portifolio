@@ -38,7 +38,7 @@ const projects = [
 
 export function PortfolioSection() {
   return (
-    <section id="portfolio" className="relative w-full py-12 md:py-24 lg:py-32 bg-card overflow-hidden">
+    <section id="portfolio" className="relative w-full py-12 md:py-24 lg:py-32 bg-card">
       <div className="container px-4 md:px-6 h-[600px]">
         <div className="flex flex-col items-start justify-center space-y-4 text-left w-1/2">
           <div className="space-y-2">
