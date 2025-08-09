@@ -2,14 +2,9 @@
 
 import { Github, Linkedin } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 export function AppFooter() {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t py-6 md:py-8">
