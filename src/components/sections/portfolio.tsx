@@ -1,8 +1,8 @@
-"use client"
+"useclient"
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Code, ExternalLink } from 'lucide-react';
+import { Code, ExternalLink, MoveRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import CardSwap, { Card } from '@/components/ui/card-swap';
 
@@ -36,17 +36,34 @@ const projects = [
   },
 ];
 
+const technologies = [
+    'React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Firebase', 'Node.js'
+]
+
 export function PortfolioSection() {
   return (
-    <section id="portfolio" className="relative w-full py-12 md:py-24 lg:py-32 bg-card">
+    <section id="portfolio" className="w-full py-12 md:py-24 lg:py-32 bg-card">
       <div className="container px-4 md:px-6 h-[600px]">
-        <div className="flex flex-col items-start justify-center space-y-4 text-left w-1/2">
-          <div className="space-y-2">
+        <div className="flex flex-col items-start justify-center space-y-4 text-left w-1/2 h-full">
+          <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Portfólio de Projetos</h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Uma seleção de projetos que demonstram minhas habilidades em desenvolvimento front-end.
             </p>
+             <Button asChild>
+                <Link href="/admin/projetos">
+                    Ver todos os projetos <MoveRight className="ml-2 h-4 w-4" />
+                </Link>
+             </Button>
           </div>
+           <div className="space-y-4 pt-8">
+                <h3 className="text-xl font-semibold">Tecnologias que Domino</h3>
+                 <div className="flex flex-wrap gap-2">
+                    {technologies.map(tech => (
+                        <Badge key={tech} variant="secondary">{tech}</Badge>
+                    ))}
+                 </div>
+            </div>
         </div>
         <CardSwap>
           {projects.map((project) => (
