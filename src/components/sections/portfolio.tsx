@@ -43,7 +43,7 @@ const technologies = [
 export function PortfolioSection() {
   return (
     <section id="portfolio" className="w-full py-12 md:py-24 lg:py-32 bg-card">
-      <div className="container px-4 md:px-6 h-[600px]">
+      <div className="container flex items-center px-4 md:px-6 h-[600px]">
         <div className="flex flex-col items-start justify-center space-y-4 text-left w-1/2 h-full">
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Portfólio de Projetos</h2>
@@ -65,34 +65,36 @@ export function PortfolioSection() {
                  </div>
             </div>
         </div>
-        <CardSwap>
-          {projects.map((project) => (
-            <Card key={project.title}>
-                <div className="flex flex-col h-full p-6">
-                    <div className="relative h-48 w-full mb-4">
-                       <Image src={project.image} alt={project.title} fill objectFit="cover" className="rounded-lg" data-ai-hint={project.aiHint} />
+        <div className="w-1/2 h-full relative">
+            <CardSwap>
+              {projects.map((project) => (
+                <Card key={project.title}>
+                    <div className="flex flex-col h-full p-6">
+                        <div className="relative h-48 w-full mb-4">
+                           <Image src={project.image} alt={project.title} fill objectFit="cover" className="rounded-lg" data-ai-hint={project.aiHint} />
+                        </div>
+                        <h3 className="text-2xl font-semibold leading-none tracking-tight mb-2 text-card-foreground">{project.title}</h3>
+                        <p className="text-sm text-muted-foreground mb-4 flex-grow">{project.description}</p>
+                         <div className="flex flex-wrap gap-2 mb-4">
+                            {project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                         </div>
+                      <div className="flex justify-between mt-auto">
+                        <Button asChild variant="outline">
+                          <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="mr-2 h-4 w-4" /> Ver Projeto
+                          </Link>
+                        </Button>
+                        <Button asChild variant="ghost">
+                          <Link href={project.codeUrl} target="_blank" rel="noopener noreferrer">
+                            <Code className="mr-2 h-4 w-4" /> Código
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-semibold leading-none tracking-tight mb-2 text-card-foreground">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 flex-grow">{project.description}</p>
-                     <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-                     </div>
-                  <div className="flex justify-between mt-auto">
-                    <Button asChild variant="outline">
-                      <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="mr-2 h-4 w-4" /> Ver Projeto
-                      </Link>
-                    </Button>
-                    <Button asChild variant="ghost">
-                      <Link href={project.codeUrl} target="_blank" rel="noopener noreferrer">
-                        <Code className="mr-2 h-4 w-4" /> Código
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-            </Card>
-          ))}
-        </CardSwap>
+                </Card>
+              ))}
+            </CardSwap>
+        </div>
       </div>
     </section>
   );
