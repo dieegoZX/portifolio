@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-background">
+      <div className="flex min-h-screen">
         <Sidebar>
           <div className="flex h-full flex-col">
             <div className="flex h-14 items-center px-4">
@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Projetos">
-                  <Link href="#">
+                  <Link href="/admin/projetos">
                     <Newspaper />
                     <span>Projetos</span>
                   </Link>
@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Landing Pages">
-                  <Link href="#">
+                  <Link href="/admin/landing-pages">
                     <Image />
                     <span>Landing Pages</span>
                   </Link>
@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Depoimentos">
-                  <Link href="#">
+                  <Link href="/admin/depoimentos">
                     <MessageSquare />
                     <span>Depoimentos</span>
                   </Link>
@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </div>
               <h2 className="text-lg font-semibold">Dashboard</h2>
             </header>
-          <main className="p-4">
+          <main className="p-4 bg-background text-foreground">
             {children}
           </main>
         </SidebarInset>
