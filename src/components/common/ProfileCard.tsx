@@ -328,7 +328,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           <div className="pc-shine" />
           <div className="pc-glare" />
           
-           {avatarUrl && !showUserInfo && (
+           {showUserInfo && avatarUrl && (
               <div className="pc-content pc-avatar-content">
                 <img
                   className="avatar"
