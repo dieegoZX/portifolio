@@ -114,7 +114,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
       };
 
       Object.entries(properties).forEach(([property, value]) => {
-        wrap.style.setProperty(property, value);
+        wrap.style.setProperty(property, value as string);
       });
     };
 
@@ -349,7 +349,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.style.opacity = "0.5";
-                        target.src = avatarUrl;
+                        if (avatarUrl) target.src = avatarUrl;
                       }}
                     />
                   </div>
