@@ -34,7 +34,7 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
     const [previewUrl, setPreviewUrl] = useState(initialData.profilePictureUrl);
-    const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<AboutFormValues>({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<AboutFormValues>({
         resolver: zodResolver(aboutInfoSchema),
         defaultValues: initialData,
     });
@@ -42,7 +42,9 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     const watchedUrl = watch("profilePictureUrl");
 
     useEffect(() => {
-        setPreviewUrl(watchedUrl);
+        if (watchedUrl) {
+            setPreviewUrl(watchedUrl);
+        }
     }, [watchedUrl]);
 
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
