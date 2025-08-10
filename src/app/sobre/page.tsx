@@ -34,7 +34,6 @@ export default function SobrePage() {
             setAboutData(docSnap.data() as AboutData);
         } else {
             console.log("No such document!");
-             // Optionally set default data if the document doesn't exist
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Falha ao carregar os dados.');

@@ -308,8 +308,6 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
 
   const cardBgStyle = useMemo(() => ({
     backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : undefined,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
   }), [backgroundUrl]);
 
 
