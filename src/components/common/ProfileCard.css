@@ -95,8 +95,7 @@
 .pc-inside {
   inset: 1px;
   position: absolute;
-  background-image: var(--inner-gradient);
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.6);
   transform: translate3d(0, 0, 0.01px);
 }
 
