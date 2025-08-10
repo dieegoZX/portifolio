@@ -73,6 +73,7 @@ export function AboutSection() {
                     name="Diego Ruan"
                     title="Desenvolvedor"
                     avatarUrl={aboutData?.profilePictureUrl}
+                    iconUrl="https://res.cloudinary.com/hyperplexed/image/upload/v1693 Hyperplexed/codepen/hexagon.svg"
                     showUserInfo={false}
                     enableTilt={true}
                     className="w-full max-w-sm"
