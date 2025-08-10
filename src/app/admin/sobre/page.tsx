@@ -43,11 +43,9 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
         startTransition(async () => {
             try {
-                // Client-side write operation
                 const aboutDocRef = doc(db, 'about', 'main');
                 await setDoc(aboutDocRef, data, { merge: true });
 
-                // Server-side cache revalidation
                 const revalidationResult = await revalidateAboutPaths();
 
                 if (revalidationResult.success) {
@@ -71,7 +69,6 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
         });
     };
     
-    // Display validation errors as toasts
     useEffect(() => {
         const errorMessages = Object.values(errors).map(e => e.message);
         const uniqueErrorMessages = [...new Set(errorMessages)];
@@ -194,17 +191,17 @@ function AboutPageSkeleton() {
 }
 
 export default function SobreAdminPage() {
-    const { user, loading: authLoading } = useAuth(); // Auth context provides user session info
+    const { user, loading: authLoading } = useAuth();
     const [aboutData, setAboutData] = useState<AboutFormValues | null>(null);
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        // We need an authenticated user to fetch data for their specific 'about' page
-        if (authLoading) return; // Wait for auth state to be determined
+        if (authLoading) {
+            return; 
+        }
         if (!user) {
             setLoadingData(false);
-            // The layout should handle the redirect, but we can stop fetching here.
             return;
         }
 
@@ -218,7 +215,6 @@ export default function SobreAdminPage() {
                 if (docSnap.exists()) {
                     setAboutData(docSnap.data() as AboutFormValues);
                 } else {
-                    // Set default empty data if the document doesn't exist yet
                     setAboutData({
                         mainParagraph: "",
                         paragraph1: "",
@@ -237,7 +233,7 @@ export default function SobreAdminPage() {
         }
 
         fetchData();
-    }, [user, authLoading]); // Rerun effect when user object or auth loading state changes
+    }, [user, authLoading]);
 
     const isLoading = authLoading || loadingData;
 
