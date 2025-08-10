@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Menu, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import GooeyNav from './gooey-nav';
+import useNavigation from '@/hooks/use-navigation';
 
 const navItems = [
   { href: '/sobre', label: 'Sobre' },
@@ -18,6 +18,18 @@ const navItems = [
 
 export function AppHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const activeId = useNavigation(navItems.map(item => item.href));
+  
+  const handleLinkClick = (href: string) => {
+    setIsMenuOpen(false);
+    if (href.startsWith('#')) {
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -27,8 +39,25 @@ export function AppHeader() {
             <Code className="h-6 w-6 text-primary" />
             <span className="font-bold">Diego Ruan</span>
           </Link>
-          <nav className="hidden gap-6 text-sm md:flex">
-             <GooeyNav items={navItems} />
+          <nav className="hidden md:flex">
+             <ul className="flex items-center gap-6 text-sm">
+                {navItems.map((item) => (
+                    <li key={item.href}>
+                         <Link 
+                            href={item.href} 
+                            className={`px-3 py-2 rounded-md transition-colors ${activeId === item.href ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'}`}
+                            onClick={(e) => {
+                                if (item.href.startsWith('#')) {
+                                    e.preventDefault();
+                                    handleLinkClick(item.href);
+                                }
+                            }}
+                          >
+                            {item.label}
+                        </Link>
+                    </li>
+                ))}
+             </ul>
           </nav>
         </div>
 
@@ -52,7 +81,12 @@ export function AppHeader() {
                       key={item.href}
                       href={item.href}
                       className="text-lg font-medium text-foreground transition-colors hover:text-primary"
-                       onClick={() => setIsMenuOpen(false)}
+                      onClick={(e) => {
+                        if (item.href.startsWith('#')) {
+                           e.preventDefault();
+                        }
+                        handleLinkClick(item.href);
+                      }}
                     >
                       {item.label}
                     </Link>
