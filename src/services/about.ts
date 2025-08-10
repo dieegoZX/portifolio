@@ -21,7 +21,6 @@ const defaultAboutData: AboutData = {
     profilePictureUrl: "https://placehold.co/600x800.png",
 };
 
-// Function to get about data from Firestore
 export async function getAboutData(): Promise<AboutData> {
     const docRef = doc(db, ABOUT_COLLECTION_ID, ABOUT_DOC_ID);
     const docSnap = await getDoc(docRef);
@@ -29,14 +28,12 @@ export async function getAboutData(): Promise<AboutData> {
     if (docSnap.exists()) {
         return docSnap.data() as AboutData;
     } else {
-        // If the document doesn't exist, create it with default data
         await setDoc(docRef, defaultAboutData);
         return defaultAboutData;
     }
 }
 
-// Function to update about data in Firestore
-export async function updateAboutData(data: AboutData): Promise<void> {
+export async function updateAboutData(data: Partial<AboutData>): Promise<void> {
     const docRef = doc(db, ABOUT_COLLECTION_ID, ABOUT_DOC_ID);
     await setDoc(docRef, data, { merge: true });
 }

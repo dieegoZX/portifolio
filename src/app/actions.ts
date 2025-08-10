@@ -2,7 +2,7 @@
 'use server';
 
 import { z } from 'zod';
-import { updateAboutData, getAboutData } from '@/services/about';
+import { updateAboutData } from '@/services/about';
 import { revalidatePath } from 'next/cache';
 
 const contactSchema = z.object({
