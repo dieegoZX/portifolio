@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Menu, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import GooeyNav from './gooey-nav';
 
 const navItems = [
   { href: '#portfolio', label: 'Projetos' },
@@ -26,15 +27,7 @@ export function AppHeader() {
             <span className="font-bold">Diego Ruan</span>
           </Link>
           <nav className="hidden gap-6 text-sm md:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-              >
-                {item.label}
-              </Link>
-            ))}
+             <GooeyNav items={navItems} />
           </nav>
         </div>
 
