@@ -91,9 +91,9 @@ function AboutForm() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-                <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
-                <div className="flex items-start gap-4">
+             <div className="flex gap-6 items-start">
+                <div className="space-y-2 flex-shrink-0">
+                    <Label>Pré-visualização</Label>
                     <Image
                         // A 'key' é crucial. Ela força o React a recarregar o componente
                         // quando a URL muda, garantindo a atualização da pré-visualização.
@@ -105,17 +105,17 @@ function AboutForm() {
                         className="rounded-full object-cover border"
                         data-ai-hint="man developer portrait"
                     />
-                    <div className="flex-grow space-y-2">
-                        <Input
-                            id="profile-picture-url"
-                            type="url"
-                            placeholder="https://exemplo.com/sua-foto.png"
-                            // 'register' conecta o input ao react-hook-form
-                            {...register("profilePictureUrl")}
-                            className="max-w-lg"
-                        />
-                        <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
-                    </div>
+                </div>
+                <div className="space-y-2 flex-grow">
+                    <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
+                    <Input
+                        id="profile-picture-url"
+                        type="url"
+                        placeholder="https://exemplo.com/sua-foto.png"
+                        // 'register' conecta o input ao react-hook-form
+                        {...register("profilePictureUrl")}
+                    />
+                    <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
                 </div>
             </div>
 
