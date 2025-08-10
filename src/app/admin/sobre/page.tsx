@@ -33,19 +33,17 @@ type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const [previewUrl, setPreviewUrl] = useState(initialData.profilePictureUrl);
+    const [imageError, setImageError] = useState(false);
     const { register, handleSubmit, watch, formState: { errors } } = useForm<AboutFormValues>({
         resolver: zodResolver(aboutInfoSchema),
         defaultValues: initialData,
     });
 
-    const watchedUrl = watch("profilePictureUrl");
+    const previewUrl = watch("profilePictureUrl");
 
     useEffect(() => {
-        if (watchedUrl) {
-            setPreviewUrl(watchedUrl);
-        }
-    }, [watchedUrl]);
+        setImageError(false);
+    }, [previewUrl]);
 
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
         startTransition(async () => {
@@ -93,19 +91,22 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
         });
     }, [errors, toast]);
 
+    const placeholderImage = "https://placehold.co/600x800.png";
+    const imageUrl = imageError || !previewUrl ? placeholderImage : previewUrl;
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
              <div className="space-y-2">
                 <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
                  <div className="flex items-start gap-4">
                     <Image 
-                        src={previewUrl || "https://placehold.co/600x800.png"} 
+                        src={imageUrl} 
                         alt="Pré-visualização da foto de perfil" 
                         width={80} 
                         height={80} 
                         className="rounded-full object-cover border" 
                         data-ai-hint="man developer portrait"
-                        onError={() => setPreviewUrl("https://placehold.co/600x800.png")}
+                        onError={() => setImageError(true)}
                         key={previewUrl}
                     />
                     <div className="flex-grow space-y-2">
