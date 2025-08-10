@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { MoveRight } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import ProfileCard from '../common/ProfileCard';
+import '@/components/common/ProfileCard.css';
 
 export function AboutSection() {
   return (
@@ -20,19 +20,14 @@ export function AboutSection() {
                     </Link>
                 </Button>
             </div>
-             <div className="flex justify-center">
-                 <Card className="w-full max-w-sm overflow-hidden rounded-xl shadow-lg">
-                    <CardContent className="p-0">
-                        <Image
-                        src="https://placehold.co/600x800.png"
-                        alt="Foto de Diego Ruan"
-                        width={600}
-                        height={800}
-                        className="h-full w-full object-cover"
-                        data-ai-hint="man developer portrait"
-                        />
-                    </CardContent>
-                 </Card>
+             <div className="flex justify-center items-center">
+                <ProfileCard
+                  avatarUrl="https://placehold.co/600x800.png"
+                  name="Diego Ruan"
+                  title="Desenvolvedor"
+                  showUserInfo={false}
+                  className="w-full max-w-sm"
+                />
               </div>
         </div>
       </div>

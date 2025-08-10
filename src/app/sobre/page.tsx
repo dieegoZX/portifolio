@@ -2,7 +2,8 @@ import Image from 'next/image';
 import { AppHeader } from '@/components/common/header';
 import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
-import { Card, CardContent } from '@/components/ui/card';
+import ProfileCard from '@/components/common/ProfileCard';
+import '@/components/common/ProfileCard.css';
 
 export default function SobrePage() {
   return (
@@ -15,19 +16,13 @@ export default function SobrePage() {
         <section id="about-page" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-10 lg:grid-cols-2">
-              <div className="flex justify-center">
-                 <Card className="w-full max-w-sm overflow-hidden">
-                    <CardContent className="p-0">
-                        <Image
-                        src="https://placehold.co/600x800.png"
-                        alt="Foto de Diego Ruan"
-                        width={600}
-                        height={800}
-                        className="h-full w-full object-cover"
-                        data-ai-hint="man developer portrait"
-                        />
-                    </CardContent>
-                 </Card>
+              <div className="flex justify-center items-center">
+                 <ProfileCard
+                    avatarUrl="https://placehold.co/600x800.png"
+                    name="Diego Ruan"
+                    title="Desenvolvedor"
+                    showUserInfo={false}
+                  />
               </div>
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
