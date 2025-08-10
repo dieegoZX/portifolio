@@ -3,6 +3,8 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 // Ação dedicada para revalidar o cache da página "Sobre".
 // A escrita no banco de dados foi movida para o lado do cliente no componente do formulário.
@@ -10,6 +12,7 @@ export async function revalidateAboutPaths() {
     try {
         // Revalida apenas as páginas que exibem os dados da seção "Sobre".
         revalidatePath('/sobre');
+        revalidatePath('/');
         return {
             success: true,
             message: 'Cache da página "Sobre" atualizado com sucesso!',
@@ -52,7 +55,19 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
   const { name, email, message } = validatedFields.data;
 
   try {
-    console.log(`New inquiry from ${name} (${email})`);
+     if (!db) {
+      throw new Error("A conexão com o banco de dados não foi estabelecida.");
+    }
+    const contactsCollection = collection(db, 'contacts');
+    await addDoc(contactsCollection, {
+        name,
+        email,
+        message,
+        createdAt: serverTimestamp(),
+        read: false,
+    });
+
+    revalidatePath('/admin/contatos');
 
     return {
       success: true,
@@ -60,9 +75,10 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
     };
   } catch (error) {
     console.error('Error processing inquiry:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
     return {
       success: false,
-      message: 'Ocorreu um erro ao processar sua mensagem. Tente novamente mais tarde.',
+      message: `Ocorreu um erro ao processar sua mensagem. ${errorMessage}`,
     };
   }
 }

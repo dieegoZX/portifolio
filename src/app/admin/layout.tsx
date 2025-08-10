@@ -3,7 +3,7 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarInset, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
-import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings, User, LogOut, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
@@ -120,6 +120,14 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
                   <Link href="/admin/depoimentos">
                     <MessageSquare />
                     <span>Depoimentos</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Contatos" isActive={pathname === '/admin/contatos'}>
+                  <Link href="/admin/contatos">
+                    <Mail />
+                    <span>Contatos</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

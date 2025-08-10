@@ -1,30 +1,69 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
-const landingPages = [
-  {
-    title: 'LP para Lançamento de Curso',
-    description: 'Landing page otimizada para conversão, resultando em um aumento de 45% nas inscrições.',
-    beforeImage: 'https://placehold.co/600x400.png',
-    afterImage: 'https://placehold.co/600x400.png',
-    result: '+45% Conversão',
-    aiHintBefore: 'simple website',
-    aiHintAfter: 'modern website',
-  },
-  {
-    title: 'Página de Vendas de SaaS',
-    description: 'Redesign da página de vendas focado em clareza e CTAs, que dobrou a taxa de cliques.',
-    beforeImage: 'https://placehold.co/600x400.png',
-    afterImage: 'https://placehold.co/600x400.png',
-    result: '+100% CTR',
-    aiHintBefore: 'corporate website',
-    aiHintAfter: 'saas website',
-  },
-];
+interface LandingPage {
+  id: string;
+  title: string;
+  description: string;
+  beforeImage: string;
+  afterImage: string;
+  result: string;
+  aiHintBefore: string;
+  aiHintAfter: string;
+  status: 'Publicado' | 'Rascunho';
+}
+
+function LandingPageSkeleton() {
+    return (
+        <Card className="overflow-hidden">
+            <CardHeader>
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full mt-2" />
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-6 w-24 mt-2" />
+            </CardHeader>
+            <CardContent>
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-56 w-full mt-4" />
+            </CardContent>
+        </Card>
+    )
+}
+
 
 export function LandingPagesSection() {
+  const [landingPages, setLandingPages] = useState<LandingPage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLandingPages = async () => {
+      if (!db) return;
+      setLoading(true);
+      try {
+        const querySnapshot = await getDocs(collection(db, "landingPages"));
+        const pagesData = querySnapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() } as LandingPage))
+            .filter(page => page.status === 'Publicado');
+        setLandingPages(pagesData);
+      } catch (error) {
+        console.error("Error fetching landing pages: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLandingPages();
+  }, []);
+
   return (
     <section id="landing-pages" className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -37,29 +76,36 @@ export function LandingPagesSection() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl gap-8 pt-12 sm:grid-cols-1 lg:grid-cols-2">
-          {landingPages.map((page) => (
-            <Card key={page.title} className="overflow-hidden">
-              <CardHeader>
-                <CardTitle>{page.title}</CardTitle>
-                <CardDescription>{page.description}</CardDescription>
-                <Badge className="w-fit bg-secondary hover:bg-secondary/80">{page.result}</Badge>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="after" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="before">Antes</TabsTrigger>
-                    <TabsTrigger value="after">Depois</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="before">
-                    <Image src={page.beforeImage} alt={`Antes - ${page.title}`} width={600} height={400} className="rounded-md object-cover" data-ai-hint={page.aiHintBefore}/>
-                  </TabsContent>
-                  <TabsContent value="after">
-                    <Image src={page.afterImage} alt={`Depois - ${page.title}`} width={600} height={400} className="rounded-md object-cover" data-ai-hint={page.aiHintAfter}/>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          ))}
+          {loading ? (
+             <>
+                <LandingPageSkeleton />
+                <LandingPageSkeleton />
+             </>
+          ) : (
+            landingPages.map((page) => (
+              <Card key={page.id} className="overflow-hidden">
+                <CardHeader>
+                  <CardTitle>{page.title}</CardTitle>
+                  <CardDescription>{page.description}</CardDescription>
+                  <Badge className="w-fit bg-secondary hover:bg-secondary/80">{page.result}</Badge>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="after" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="before">Antes</TabsTrigger>
+                      <TabsTrigger value="after">Depois</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="before">
+                      <Image src={page.beforeImage} alt={`Antes - ${page.title}`} width={600} height={400} className="rounded-md object-cover" data-ai-hint={page.aiHintBefore}/>
+                    </TabsContent>
+                    <TabsContent value="after">
+                      <Image src={page.afterImage} alt={`Depois - ${page.title}`} width={600} height={400} className="rounded-md object-cover" data-ai-hint={page.aiHintAfter}/>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </section>

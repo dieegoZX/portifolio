@@ -1,30 +1,51 @@
 
+'use client';
+import { useState, useEffect } from 'react';
+import { collection, getDocs, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PlusCircle, MoreHorizontal } from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { Skeleton } from '@/components/ui/skeleton';
 
-const projects = [
-    {
-        title: 'E-commerce Moderno',
-        status: 'Publicado',
-        createdAt: '2023-10-27',
-    },
-    {
-        title: 'Dashboard Analítico',
-        status: 'Rascunho',
-        createdAt: '2023-11-15',
-    },
-    {
-        title: 'Sistema de Reservas',
-        status: 'Publicado',
-        createdAt: '2024-01-05',
-    }
-]
+interface Project {
+    id: string;
+    title: string;
+    status: 'Publicado' | 'Rascunho';
+    createdAt: Timestamp;
+}
+
+const formatDate = (timestamp: Timestamp | Date) => {
+    if (!timestamp) return 'N/A';
+    const date = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
+    return new Intl.DateTimeFormat('pt-BR').format(date);
+};
 
 export default function ProjetosPage() {
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            if (!db) return;
+            setLoading(true);
+            try {
+                const querySnapshot = await getDocs(collection(db, "projects"));
+                const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
+                setProjects(projectsData);
+            } catch (error) {
+                console.error("Error fetching projects: ", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
     return (
         <Card>
             <CardHeader>
@@ -33,7 +54,7 @@ export default function ProjetosPage() {
                         <h2 className="text-2xl font-semibold leading-none tracking-tight">Projetos</h2>
                         <CardDescription>Gerencie seus projetos do portfólio.</CardDescription>
                     </div>
-                    <Button asChild disabled>
+                    <Button asChild >
                         <Link href="#">
                             <PlusCircle className="mr-2 h-4 w-4" /> Novo Projeto
                         </Link>
@@ -41,41 +62,56 @@ export default function ProjetosPage() {
                 </div>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Título</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Criado em</TableHead>
-                            <TableHead><span className="sr-only">Ações</span></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {projects.map((project) => (
-                            <TableRow key={project.title}>
-                                <TableCell className="font-medium">{project.title}</TableCell>
-                                <TableCell>{project.status}</TableCell>
-                                <TableCell>{project.createdAt}</TableCell>
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                <span className="sr-only">Abrir menu</span>
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem disabled>
-                                                <Link href="#">Editar</Link>
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-500" disabled>Excluir</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
+                {loading ? (
+                    <div className="space-y-4">
+                       {[...Array(3)].map((_, i) => (
+                           <div key={i} className="flex items-center justify-between p-4 border rounded-md">
+                               <div className="space-y-1">
+                                 <Skeleton className="h-4 w-48" />
+                               </div>
+                                <Skeleton className="h-4 w-20" />
+                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-8 w-8" />
+                            </div>
                         ))}
-                    </TableBody>
-                </Table>
+                    </div>
+                ) : (
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Título</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Criado em</TableHead>
+                                <TableHead><span className="sr-only">Ações</span></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {projects.map((project) => (
+                                <TableRow key={project.id}>
+                                    <TableCell className="font-medium">{project.title}</TableCell>
+                                    <TableCell>{project.status}</TableCell>
+                                    <TableCell>{formatDate(project.createdAt)}</TableCell>
+                                    <TableCell>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                                    <span className="sr-only">Abrir menu</span>
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuItem>
+                                                    <Link href="#">Editar</Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem className="text-red-500">Excluir</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
             </CardContent>
         </Card>
     )

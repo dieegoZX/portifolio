@@ -1,33 +1,74 @@
+
+'use client';
+import { useState, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Star } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
-const testimonials = [
-  {
-    name: 'Ana Silva',
-    title: 'CEO, Tech Inova',
-    avatar: 'https://placehold.co/100x100.png',
-    testimonial: 'O Diego transformou nossa landing page. O novo design aumentou nossas conversões em 30% na primeira semana. Profissionalismo e talento incríveis!',
-    aiHint: 'woman portrait',
-  },
-  {
-    name: 'Carlos Pereira',
-    title: 'Gerente de Marketing, Vende+',
-    avatar: 'https://placehold.co/100x100.png',
-    testimonial: 'As campanhas de tráfego que o Diego gerencia para nós trouxeram um ROI de 5x. Sua expertise em otimização é fundamental para nosso sucesso.',
-    aiHint: 'man portrait',
-  },
-  {
-    name: 'Juliana Costa',
-    title: 'Empreendedora',
-    avatar: 'https://placehold.co/100x100.png',
-    testimonial: 'O trabalho de front-end no meu site ficou impecável. Rápido, responsivo e exatamente como eu imaginei. Recomendo fortemente!',
-    aiHint: 'business woman',
-  },
-];
+interface Testimonial {
+  id: string;
+  name: string;
+  title: string;
+  avatar: string;
+  testimonial: string;
+  aiHint: string;
+  status: 'Publicado' | 'Rascunho';
+}
+
+function TestimonialSkeleton() {
+    return (
+        <div className="p-1">
+            <Card>
+                <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-3 w-32" />
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex gap-1">
+                        {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-4 w-4" />)}
+                    </div>
+                    <div className="space-y-2">
+                       <Skeleton className="h-4 w-full" />
+                       <Skeleton className="h-4 w-full" />
+                       <Skeleton className="h-4 w-3/4" />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
 
 export function TestimonialsSection() {
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTestimonials = async () => {
+            if (!db) return;
+            setLoading(true);
+            try {
+                const querySnapshot = await getDocs(collection(db, "testimonials"));
+                const testimonialsData = querySnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() } as Testimonial))
+                    .filter(testimonial => testimonial.status === 'Publicado');
+                setTestimonials(testimonialsData);
+            } catch (error) {
+                console.error("Error fetching testimonials: ", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTestimonials();
+    }, []);
+
   return (
     <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -44,30 +85,38 @@ export function TestimonialsSection() {
           className="mx-auto w-full max-w-4xl pt-12"
         >
           <CarouselContent>
-            {testimonials.map((item, index) => (
-              <CarouselItem key={index} className="md:basis-1/2">
-                <div className="p-1">
-                  <Card>
-                    <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                       <Avatar className="h-12 w-12">
-                         <AvatarImage src={item.avatar} alt={item.name} data-ai-hint={item.aiHint}/>
-                         <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
-                       </Avatar>
-                       <div>
-                         <p className="font-semibold">{item.name}</p>
-                         <p className="text-sm text-muted-foreground">{item.title}</p>
-                       </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-primary text-primary"/>)}
-                        </div>
-                      <p className="text-foreground/80">&ldquo;{item.testimonial}&rdquo;</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
+            {loading ? (
+                <>
+                    <CarouselItem className="md:basis-1/2"><TestimonialSkeleton/></CarouselItem>
+                    <CarouselItem className="md:basis-1/2"><TestimonialSkeleton/></CarouselItem>
+                    <CarouselItem className="md:basis-1/2"><TestimonialSkeleton/></CarouselItem>
+                </>
+            ) : (
+                testimonials.map((item) => (
+                  <CarouselItem key={item.id} className="md:basis-1/2">
+                    <div className="p-1">
+                      <Card>
+                        <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                           <Avatar className="h-12 w-12">
+                             <AvatarImage src={item.avatar} alt={item.name} data-ai-hint={item.aiHint}/>
+                             <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
+                           </Avatar>
+                           <div>
+                             <p className="font-semibold">{item.name}</p>
+                             <p className="text-sm text-muted-foreground">{item.title}</p>
+                           </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex gap-1">
+                                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-primary text-primary"/>)}
+                            </div>
+                          <p className="text-foreground/80">&ldquo;{item.testimonial}&rdquo;</p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))
+            )}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
