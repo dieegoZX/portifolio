@@ -1,16 +1,20 @@
 
 'use client';
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PlusCircle, MoreHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from '@/components/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { deleteItem } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+
 
 interface Testimonial {
     id: string;
@@ -25,24 +29,36 @@ interface Testimonial {
 export default function DepoimentosPage() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
+
+    const fetchTestimonials = async () => {
+        if (!db) return;
+        setLoading(true);
+        try {
+            const querySnapshot = await getDocs(collection(db, "testimonials"));
+            const testimonialsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
+            setTestimonials(testimonialsData);
+        } catch (error) {
+            console.error("Error fetching testimonials: ", error);
+            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível carregar os depoimentos.' });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchTestimonials = async () => {
-            if (!db) return;
-            setLoading(true);
-            try {
-                const querySnapshot = await getDocs(collection(db, "testimonials"));
-                const testimonialsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
-                setTestimonials(testimonialsData);
-            } catch (error) {
-                console.error("Error fetching testimonials: ", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchTestimonials();
     }, []);
+
+    const handleDelete = async (id: string) => {
+        const result = await deleteItem('testimonials', id, '/admin/depoimentos');
+        if (result.success) {
+            toast({ title: 'Sucesso', description: result.message });
+            fetchTestimonials();
+        } else {
+            toast({ variant: 'destructive', title: 'Erro', description: result.message });
+        }
+    };
 
     return (
         <Card>
@@ -53,7 +69,7 @@ export default function DepoimentosPage() {
                         <CardDescription>Gerencie os depoimentos dos seus clientes.</CardDescription>
                     </div>
                     <Button asChild >
-                        <Link href="#">
+                        <Link href="/admin/depoimentos/novo">
                             <PlusCircle className="mr-2 h-4 w-4" /> Novo Depoimento
                         </Link>
                     </Button>
@@ -101,20 +117,37 @@ export default function DepoimentosPage() {
                                 <TableCell>{item.title}</TableCell>
                                 <TableCell>{item.status}</TableCell>
                                 <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                <span className="sr-only">Abrir menu</span>
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem>
-                                                <Link href="#">Editar</Link>
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-500" >Excluir</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <AlertDialog>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                                    <span className="sr-only">Abrir menu</span>
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuItem asChild>
+                                                    <Link href={`/admin/depoimentos/editar/${item.id}`}>Editar</Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuSeparator />
+                                                <AlertDialogTrigger asChild>
+                                                    <DropdownMenuItem className="text-red-500" onSelect={(e) => e.preventDefault()}>Excluir</DropdownMenuItem>
+                                                </AlertDialogTrigger>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Essa ação não pode ser desfeita. Isso excluirá permanentemente o depoimento.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(item.id)}>Continuar</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </TableCell>
                             </TableRow>
                         ))}

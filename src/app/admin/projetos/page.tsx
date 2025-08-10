@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PlusCircle, MoreHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Skeleton } from '@/components/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { deleteItem } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
 
 interface Project {
     id: string;
@@ -27,24 +30,36 @@ const formatDate = (timestamp: Timestamp | Date) => {
 export default function ProjetosPage() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
+
+    const fetchProjects = async () => {
+        if (!db) return;
+        setLoading(true);
+        try {
+            const querySnapshot = await getDocs(collection(db, "projects"));
+            const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
+            setProjects(projectsData);
+        } catch (error) {
+            console.error("Error fetching projects: ", error);
+            toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível carregar os projetos.' });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchProjects = async () => {
-            if (!db) return;
-            setLoading(true);
-            try {
-                const querySnapshot = await getDocs(collection(db, "projects"));
-                const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
-                setProjects(projectsData);
-            } catch (error) {
-                console.error("Error fetching projects: ", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchProjects();
     }, []);
+
+    const handleDelete = async (id: string) => {
+        const result = await deleteItem('projects', id, '/admin/projetos');
+        if (result.success) {
+            toast({ title: 'Sucesso', description: result.message });
+            fetchProjects(); // Refresh data
+        } else {
+            toast({ variant: 'destructive', title: 'Erro', description: result.message });
+        }
+    };
 
     return (
         <Card>
@@ -55,7 +70,7 @@ export default function ProjetosPage() {
                         <CardDescription>Gerencie seus projetos do portfólio.</CardDescription>
                     </div>
                     <Button asChild >
-                        <Link href="#">
+                        <Link href="/admin/projetos/novo">
                             <PlusCircle className="mr-2 h-4 w-4" /> Novo Projeto
                         </Link>
                     </Button>
@@ -92,20 +107,37 @@ export default function ProjetosPage() {
                                     <TableCell>{project.status}</TableCell>
                                     <TableCell>{formatDate(project.createdAt)}</TableCell>
                                     <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                                    <span className="sr-only">Abrir menu</span>
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>
-                                                    <Link href="#">Editar</Link>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem className="text-red-500">Excluir</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        <AlertDialog>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <span className="sr-only">Abrir menu</span>
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem asChild>
+                                                        <Link href={`/admin/projetos/editar/${project.id}`}>Editar</Link>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <AlertDialogTrigger asChild>
+                                                        <DropdownMenuItem className="text-red-500" onSelect={(e) => e.preventDefault()}>Excluir</DropdownMenuItem>
+                                                    </AlertDialogTrigger>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Essa ação não pode ser desfeita. Isso excluirá permanentemente o projeto.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(project.id)}>Continuar</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </TableCell>
                                 </TableRow>
                             ))}
