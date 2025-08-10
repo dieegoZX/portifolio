@@ -47,6 +47,13 @@ export default function SobrePage() {
     }
     fetchData();
   }, []);
+  
+  const handleContactClick = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -82,12 +89,14 @@ export default function SobrePage() {
                    <ProfileCard
                       name="Diego Ruan"
                       title="Desenvolvedor"
-                      handle="diegoruan"
+                      handle="dieego_ruan"
                       status="Online"
                       contactText="Contato"
                       avatarUrl={aboutData.profilePictureUrl}
+                      miniAvatarUrl={aboutData.profilePictureUrl}
                       showUserInfo={true}
                       enableTilt={true}
+                      onContactClick={handleContactClick}
                     />
                 </div>
                 <div className="flex flex-col justify-center space-y-4">
@@ -113,6 +122,7 @@ export default function SobrePage() {
             )}
           </div>
         </section>
+        <ContactSection />
       </main>
       <AppFooter />
     </div>

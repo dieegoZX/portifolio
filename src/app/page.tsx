@@ -8,6 +8,16 @@ import { LandingPagesSection } from '@/components/sections/landing-pages';
 import { TrafficManagementSection } from '@/components/sections/traffic-management';
 import { TestimonialsSection } from '@/components/sections/testimonials';
 import { ContactSection } from '@/components/sections/contact';
+import { AppHeader } from '@/components/common/header';
+import { AppFooter } from '@/components/common/footer';
+import LetterGlitch from '@/components/common/letter-glitch';
+import { HeroSection } from '@/components/sections/hero';
+import { AboutSection } from '@/components/sections/about';
+import { PortfolioSection } from '@/components/sections/portfolio';
+import { LandingPagesSection } from '@/components/sections/landing-pages';
+import { TrafficManagementSection } from '@/components/sections/traffic-management';
+import { TestimonialsSection } from '@/components/sections/testimonials';
+import { ContactSection } from '@/components/sections/contact';
 
 export default function Home() {
   return (
