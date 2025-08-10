@@ -72,7 +72,7 @@ export function PortfolioSection() {
               Uma seleção de projetos que demonstram minhas habilidades em desenvolvimento front-end.
             </p>
              <Button asChild>
-                <Link href="/admin/projetos">
+                <Link href="#portfolio">
                     Ver todos os projetos <MoveRight className="ml-2 h-4 w-4" />
                 </Link>
              </Button>
