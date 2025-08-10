@@ -34,15 +34,15 @@
   }
 
   .dark {
-    --background: 240 7% 9%; /* Darker Greenish */
-    --foreground: 0 0% 98%; /* White */
+    --background: 240 7% 30%;
+    --foreground: 0 0% 98%;
     --card: 240 7% 20%;
     --card-foreground: 0 0% 98%;
     --popover: 240 7% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 20 95% 55%; /* Fire Orange */
+    --primary: 20 95% 55%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 353 43% 31%; /* Wine Red */
+    --secondary: 353 43% 31%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 7% 25%;
     --muted-foreground: 0 0% 63.9%;
