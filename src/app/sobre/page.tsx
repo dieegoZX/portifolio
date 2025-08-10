@@ -78,7 +78,7 @@ export default function SobrePage() {
               <div className="grid gap-10 lg:grid-cols-2">
                 <div className="flex justify-center items-center">
                    <ProfileCard
-                      backgroundUrl={aboutData.profilePictureUrl || "https://placehold.co/600x800.png"}
+                      backgroundUrl={aboutData.profilePictureUrl}
                       name="Diego Ruan"
                       title="Desenvolvedor"
                       showUserInfo={false}

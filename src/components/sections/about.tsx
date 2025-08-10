@@ -66,7 +66,7 @@ export function AboutSection() {
                   <Skeleton className="h-[80vh] w-full max-w-sm rounded-xl" />
                 ) : (
                   <ProfileCard
-                    backgroundUrl={aboutData?.profilePictureUrl || "https://placehold.co/600x800.png"}
+                    backgroundUrl={aboutData?.profilePictureUrl}
                     name="Diego Ruan"
                     title="Desenvolvedor"
                     showUserInfo={false}

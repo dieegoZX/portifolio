@@ -106,7 +106,7 @@ function AboutForm() {
                         placeholder="https://exemplo.com/sua-foto.png"
                         {...register("profilePictureUrl")}
                     />
-                    <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
+                    <p className="text-sm text-muted-foreground">Cole o link direto da imagem (ex: terminado em .png, .jpg).</p>
                 </div>
             </div>
 
