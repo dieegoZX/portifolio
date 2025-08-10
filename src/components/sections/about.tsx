@@ -70,9 +70,11 @@ export function AboutSection() {
                   <Skeleton className="h-[80vh] w-full max-w-sm rounded-xl" />
                 ) : (
                   <ProfileCard
-                    backgroundUrl={aboutData?.profilePictureUrl}
                     name="Diego Ruan"
                     title="Desenvolvedor"
+                    avatarUrl={aboutData?.profilePictureUrl}
+                    showUserInfo={false}
+                    enableTilt={true}
                     className="w-full max-w-sm"
                   />
                 )}

@@ -80,9 +80,14 @@ export default function SobrePage() {
               <div className="grid gap-10 lg:grid-cols-2">
                 <div className="flex justify-center items-center">
                    <ProfileCard
-                      backgroundUrl={aboutData.profilePictureUrl}
                       name="Diego Ruan"
                       title="Desenvolvedor"
+                      handle="diegoruan"
+                      status="Online"
+                      contactText="Contato"
+                      avatarUrl={aboutData.profilePictureUrl}
+                      showUserInfo={true}
+                      enableTilt={true}
                     />
                 </div>
                 <div className="flex flex-col justify-center space-y-4">
