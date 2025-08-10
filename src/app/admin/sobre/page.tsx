@@ -29,14 +29,10 @@ const aboutInfoSchema = z.object({
 
 type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 
-// Este componente foi reescrito do zero para garantir a funcionalidade correta.
 function AboutForm() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    // Acessa os métodos do formulário (fornecidos pelo FormProvider)
     const { register, handleSubmit, watch, formState: { errors } } = useFormContext<AboutFormValues>();
-
-    // 'watch' observa o campo em tempo real. Esta é a única fonte de verdade para a URL.
     const previewUrl = watch("profilePictureUrl");
 
     const onSubmit: SubmitHandler<AboutFormValues> = (data) => {
@@ -71,7 +67,6 @@ function AboutForm() {
         });
     };
 
-    // Efeito para mostrar erros de validação
     useEffect(() => {
         const errorMessages = Object.values(errors).map(e => e.message);
         const uniqueErrorMessages = [...new Set(errorMessages)];
@@ -104,12 +99,11 @@ function AboutForm() {
                     />
                 </div>
                 <div className="space-y-2 flex-grow">
-                    <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
+                    <Label htmlFor="profilePictureUrl">URL da Foto de Perfil</Label>
                     <Input
-                        id="profile-picture-url"
+                        id="profilePictureUrl"
                         type="url"
                         placeholder="https://exemplo.com/sua-foto.png"
-                        // 'register' conecta o input ao react-hook-form
                         {...register("profilePictureUrl")}
                     />
                     <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
@@ -117,34 +111,34 @@ function AboutForm() {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="main-paragraph">Parágrafo Principal</Label>
+                <Label htmlFor="mainParagraph">Parágrafo Principal</Label>
                 <Textarea
-                    id="main-paragraph"
+                    id="mainParagraph"
                     {...register("mainParagraph")}
                     rows={3}
                 />
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="paragraph-1">Primeiro Parágrafo</Label>
+                <Label htmlFor="paragraph1">Primeiro Parágrafo</Label>
                 <Textarea
-                    id="paragraph-1"
+                    id="paragraph1"
                     {...register("paragraph1")}
                     rows={5}
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="paragraph-2">Segundo Parágrafo</Label>
+                <Label htmlFor="paragraph2">Segundo Parágrafo</Label>
                 <Textarea
-                    id="paragraph-2"
+                    id="paragraph2"
                     {...register("paragraph2")}
                     rows={5}
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="paragraph-3">Terceiro Parágrafo</Label>
+                <Label htmlFor="paragraph3">Terceiro Parágrafo</Label>
                 <Textarea
-                    id="paragraph-3"
+                    id="paragraph3"
                     {...register("paragraph3")}
                     rows={3}
                 />
@@ -159,7 +153,6 @@ function AboutForm() {
         </form>
     );
 }
-
 
 function AboutPageSkeleton() {
     return (
@@ -200,7 +193,6 @@ export default function SobreAdminPage() {
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // useForm agora é chamado no componente pai, que gerencia o estado.
     const methods = useForm<AboutFormValues>({
         resolver: zodResolver(aboutInfoSchema),
         defaultValues: {
@@ -231,7 +223,6 @@ export default function SobreAdminPage() {
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    // 'reset' atualiza os valores do formulário com os dados do Firebase
                     methods.reset(data as AboutFormValues);
                 }
             } catch (err) {
@@ -260,7 +251,6 @@ export default function SobreAdminPage() {
                 ) : error ? (
                     <p className="text-destructive text-center py-8">{error}</p>
                 ) : (
-                    // FormProvider passa a instância do formulário para os componentes filhos
                     <FormProvider {...methods}>
                         <AboutForm />
                     </FormProvider>

@@ -37,7 +37,7 @@ export default function DepoimentosPage() {
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <div>
-                        <CardTitle>Depoimentos</CardTitle>
+                        <h2 className="text-2xl font-semibold leading-none tracking-tight">Depoimentos</h2>
                         <CardDescription>Gerencie os depoimentos dos seus clientes.</CardDescription>
                     </div>
                     <Button asChild disabled>

@@ -25,7 +25,7 @@ export default function LandingPagesAdminPage() {
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <div>
-                        <CardTitle>Landing Pages</CardTitle>
+                        <h2 className="text-2xl font-semibold leading-none tracking-tight">Landing Pages</h2>
                         <CardDescription>Gerencie as landing pages da sua galeria.</CardDescription>
                     </div>
                     <Button asChild disabled>

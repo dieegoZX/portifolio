@@ -3,8 +3,25 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+
+// Ação dedicada para revalidar o cache da página "Sobre".
+// A escrita no banco de dados foi movida para o lado do cliente no componente do formulário.
+export async function revalidateAboutPaths() {
+    try {
+        // Revalida apenas as páginas que exibem os dados da seção "Sobre".
+        revalidatePath('/sobre');
+        return {
+            success: true,
+            message: 'Cache da página "Sobre" atualizado com sucesso!',
+        };
+    } catch(error) {
+         console.error('Error revalidating about paths:', error);
+         return {
+            success: false,
+            message: 'Ocorreu um erro ao atualizar o cache da página.',
+        };
+    }
+}
 
 
 const contactSchema = z.object({
@@ -48,24 +65,4 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
       message: 'Ocorreu um erro ao processar sua mensagem. Tente novamente mais tarde.',
     };
   }
-}
-
-// This action is now only responsible for revalidating paths.
-// The actual database write operation is handled on the client-side.
-export async function revalidateAboutPaths() {
-    try {
-        revalidatePath('/');
-        revalidatePath('/sobre');
-        revalidatePath('/admin/sobre');
-        return {
-            success: true,
-            message: 'Informações da página "Sobre" atualizadas com sucesso!',
-        };
-    } catch(error) {
-         console.error('Error revalidating about paths:', error);
-         return {
-            success: false,
-            message: 'Ocorreu um erro ao atualizar o cache da página.',
-        };
-    }
 }

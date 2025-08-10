@@ -30,7 +30,7 @@ export default function ProjetosPage() {
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <div>
-                        <CardTitle>Projetos</CardTitle>
+                        <h2 className="text-2xl font-semibold leading-none tracking-tight">Projetos</h2>
                         <CardDescription>Gerencie seus projetos do portfólio.</CardDescription>
                     </div>
                     <Button asChild disabled>

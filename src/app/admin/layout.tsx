@@ -26,7 +26,8 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
      useEffect(() => {
         const pathParts = pathname.split('/').filter(Boolean);
         if (pathParts.length > 1) {
-            const title = pathParts[1].charAt(0).toUpperCase() + pathParts[1].slice(1);
+            let title = pathParts[1].charAt(0).toUpperCase() + pathParts[1].slice(1);
+            if (title === 'Landing-pages') title = 'Landing Pages';
             setHeaderTitle(title);
         } else {
             setHeaderTitle('Dashboard');
