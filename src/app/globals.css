@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 240 7% 12%; /* Darker Greenish */
+    --background: 240 7% 9%; /* Darker Greenish */
     --foreground: 0 0% 98%; /* White */
     --card: 240 7% 20%;
     --card-foreground: 0 0% 98%;
@@ -25,7 +25,7 @@
     --ring: 20 95% 55%;
     --radius: 0.5rem;
 
-    --sidebar-background: 240 7% 12%;
+    --sidebar-background: 240 7% 9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 240 7% 25%;
     --sidebar-accent: 20 95% 55%;
@@ -34,7 +34,7 @@
   }
 
   .dark {
-    --background: 240 7% 12%; /* Darker Greenish */
+    --background: 240 7% 9%; /* Darker Greenish */
     --foreground: 0 0% 98%; /* White */
     --card: 240 7% 20%;
     --card-foreground: 0 0% 98%;
@@ -54,7 +54,7 @@
     --input: 240 7% 30%;
     --ring: 20 95% 55%;
 
-    --sidebar-background: 240 7% 12%;
+    --sidebar-background: 240 7% 9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 240 7% 25%;
     --sidebar-accent: 20 95% 55%;
