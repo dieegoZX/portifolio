@@ -10,6 +10,7 @@ import '@/components/common/ProfileCard.css';
 import { Skeleton } from '@/components/ui/skeleton';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { convertImgurLink } from '@/lib/utils';
 
 interface AboutData {
     mainParagraph: string;
@@ -27,7 +28,11 @@ export function AboutSection() {
         const docRef = doc(db, 'about', 'main');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setAboutData(docSnap.data() as AboutData);
+          const data = docSnap.data() as AboutData;
+          setAboutData({
+            ...data,
+            profilePictureUrl: convertImgurLink(data.profilePictureUrl) || data.profilePictureUrl,
+          });
         }
       } catch (error) {
         console.error("Failed to fetch about data:", error);
