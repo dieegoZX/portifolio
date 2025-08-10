@@ -328,18 +328,20 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
           <div className="pc-shine" />
           <div className="pc-glare" />
           
-           {showUserInfo && avatarUrl && <div className="pc-content pc-avatar-content">
-            <img
-              className="avatar"
-              src={avatarUrl}
-              alt={`${name || "User"} avatar`}
-              loading="lazy"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-              }}
-            />
-            </div>}
+           {avatarUrl && (
+              <div className="pc-content pc-avatar-content">
+                <img
+                  className="avatar"
+                  src={avatarUrl}
+                  alt={`${name || "User"} avatar`}
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                  }}
+                />
+              </div>
+            )}
              {showUserInfo && (
               <div className="pc-user-info">
                 <div className="pc-user-details">
