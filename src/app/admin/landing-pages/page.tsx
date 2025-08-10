@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -27,7 +28,7 @@ export default function LandingPagesAdminPage() {
                         <CardTitle>Landing Pages</CardTitle>
                         <CardDescription>Gerencie as landing pages da sua galeria.</CardDescription>
                     </div>
-                    <Button asChild>
+                    <Button asChild disabled>
                         <Link href="#">
                             <PlusCircle className="mr-2 h-4 w-4" /> Nova Landing Page
                         </Link>
@@ -59,10 +60,10 @@ export default function LandingPagesAdminPage() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem>
+                                            <DropdownMenuItem disabled>
                                                 <Link href="#">Editar</Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-500">Excluir</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-red-500" disabled>Excluir</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>

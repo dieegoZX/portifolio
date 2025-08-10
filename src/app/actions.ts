@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -30,8 +31,6 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
   const { name, email, message } = validatedFields.data;
 
   try {
-    // In a real application, you would now handle the inquiry.
-    // For example, send an email, save to a CRM, etc.
     console.log(`New inquiry from ${name} (${email})`);
 
     return {
@@ -45,4 +44,50 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
       message: 'Ocorreu um erro ao processar sua mensagem. Tente novamente mais tarde.',
     };
   }
+}
+
+const aboutInfoSchema = z.object({
+    mainParagraph: z.string().min(10),
+    paragraph1: z.string().min(10),
+    paragraph2: z.string().min(10),
+    paragraph3: z.string().min(10),
+});
+
+export async function updateAboutInfo(prevState: any, formData: FormData): Promise<State> {
+    const validatedFields = aboutInfoSchema.safeParse({
+        mainParagraph: formData.get('mainParagraph'),
+        paragraph1: formData.get('paragraph1'),
+        paragraph2: formData.get('paragraph2'),
+        paragraph3: formData.get('paragraph3'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            success: false,
+            message: "Todos os campos de texto devem ser preenchidos.",
+        };
+    }
+    
+    // In a real app, you would save this to a database.
+    console.log('Updating about info:', validatedFields.data);
+    const profilePicture = formData.get('profilePicture') as File;
+    if(profilePicture && profilePicture.size > 0) {
+        console.log('New profile picture uploaded:', profilePicture.name, `${profilePicture.size / 1024}KB`);
+    }
+
+    try {
+        // Simulate saving data
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        return {
+            success: true,
+            message: 'Informações da página "Sobre" atualizadas com sucesso!',
+        };
+    } catch (error) {
+        console.error('Error updating about info:', error);
+        return {
+            success: false,
+            message: 'Ocorreu um erro ao salvar as informações. Tente novamente.',
+        };
+    }
 }

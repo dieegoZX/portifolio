@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -32,7 +33,7 @@ export default function ProjetosPage() {
                         <CardTitle>Projetos</CardTitle>
                         <CardDescription>Gerencie seus projetos do portfólio.</CardDescription>
                     </div>
-                    <Button asChild>
+                    <Button asChild disabled>
                         <Link href="#">
                             <PlusCircle className="mr-2 h-4 w-4" /> Novo Projeto
                         </Link>
@@ -64,10 +65,10 @@ export default function ProjetosPage() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem>
+                                            <DropdownMenuItem disabled>
                                                 <Link href="#">Editar</Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-500">Excluir</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-red-500" disabled>Excluir</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
