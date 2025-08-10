@@ -60,6 +60,7 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
                 }
                
             } catch (error) {
+                console.error("Firebase save error:", error);
                 const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
                 toast({
                     variant: "destructive",
@@ -193,17 +194,22 @@ function AboutPageSkeleton() {
 }
 
 export default function SobreAdminPage() {
-    const { user } = useAuth(); // Auth context provides user session info
+    const { user, loading: authLoading } = useAuth(); // Auth context provides user session info
     const [aboutData, setAboutData] = useState<AboutFormValues | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         // We need an authenticated user to fetch data for their specific 'about' page
-        if (!user) return; 
+        if (authLoading) return; // Wait for auth state to be determined
+        if (!user) {
+            setLoadingData(false);
+            // The layout should handle the redirect, but we can stop fetching here.
+            return;
+        }
 
         async function fetchData() {
-            setLoading(true);
+            setLoadingData(true);
             setError(null);
             try {
                 const docRef = doc(db, 'about', 'main');
@@ -226,12 +232,14 @@ export default function SobreAdminPage() {
                 const errorMessage = err instanceof Error ? err.message : 'Falha ao carregar os dados.';
                 setError(errorMessage);
             } finally {
-                setLoading(false);
+                setLoadingData(false);
             }
         }
 
         fetchData();
-    }, [user]); // Rerun effect when user object changes
+    }, [user, authLoading]); // Rerun effect when user object or auth loading state changes
+
+    const isLoading = authLoading || loadingData;
 
     return (
         <Card>
@@ -240,9 +248,9 @@ export default function SobreAdminPage() {
                 <CardDescription>Atualize as informações da sua página "Sobre Mim".</CardDescription>
             </CardHeader>
             <CardContent>
-                {loading && <AboutPageSkeleton />}
+                {isLoading && <AboutPageSkeleton />}
                 {error && <p className="text-destructive text-center py-8">{error}</p>}
-                {!loading && !error && aboutData && <AboutForm initialData={aboutData} />}
+                {!isLoading && !error && aboutData && <AboutForm initialData={aboutData} />}
             </CardContent>
         </Card>
     )
