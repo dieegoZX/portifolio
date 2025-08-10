@@ -8,13 +8,13 @@ export function HeroSection() {
       <div className="container px-4 md:px-6">
         <div className="mx-auto grid max-w-5xl items-center gap-6 text-center">
           <div className="space-y-4">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none">
+            <h1 className="text-4xl font-bold tracking-tighter text-foreground sm:text-5xl md:text-6xl lg:text-7xl/none">
               Diego Ruan
             </h1>
-            <p className="text-2xl font-medium tracking-tight text-primary sm:text-3xl">
+            <p className="text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
               Desenvolvedor Front-End & Gestor de Tráfego
             </p>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+            <p className="mx-auto max-w-[700px] text-foreground/80 md:text-xl">
               Criando interfaces de usuário de alta performance e otimizando campanhas de tráfego pago para impulsionar seus resultados.
             </p>
           </div>
