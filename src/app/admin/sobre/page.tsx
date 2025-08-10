@@ -29,10 +29,26 @@ const aboutInfoSchema = z.object({
 
 type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 
+// Função para converter links do Imgur
+const convertImgurLink = (url: string): string => {
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname === 'imgur.com' && !urlObj.hostname.startsWith('i.')) {
+            // Converte https://imgur.com/XXXXX para https://i.imgur.com/XXXXX.png
+            return `https://i.imgur.com${urlObj.pathname}.png`;
+        }
+    } catch (e) {
+        // Se a URL for inválida, retorna o original
+        return url;
+    }
+    return url;
+};
+
+
 function AboutForm() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const { register, handleSubmit, watch, formState: { errors } } = useFormContext<AboutFormValues>();
+    const { register, handleSubmit, watch, formState: { errors }, setValue } = useFormContext<AboutFormValues>();
     const previewUrl = watch("profilePictureUrl");
 
     const onSubmit: SubmitHandler<AboutFormValues> = (data) => {
@@ -42,7 +58,13 @@ function AboutForm() {
                     throw new Error("Conexão com o banco de dados não estabelecida.");
                 }
                 const aboutDocRef = doc(db, 'about', 'main');
-                await setDoc(aboutDocRef, data, { merge: true });
+                
+                const dataToSave = {
+                    ...data,
+                    profilePictureUrl: convertImgurLink(data.profilePictureUrl),
+                };
+
+                await setDoc(aboutDocRef, dataToSave, { merge: true });
 
                 const revalidationResult = await revalidateAboutPaths();
 
@@ -51,6 +73,7 @@ function AboutForm() {
                         title: "Sucesso!",
                         description: "Informações da página 'Sobre' atualizadas com sucesso!",
                     });
+                     setValue('profilePictureUrl', dataToSave.profilePictureUrl);
                 } else {
                     throw new Error(revalidationResult.message);
                 }
@@ -82,6 +105,7 @@ function AboutForm() {
     }, [errors, toast]);
     
     const placeholderImage = "https://placehold.co/80x80.png";
+    const displayUrl = convertImgurLink(previewUrl);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -89,8 +113,8 @@ function AboutForm() {
                 <div className="space-y-2 flex-shrink-0">
                     <Label>Pré-visualização</Label>
                     <img
-                        key={previewUrl}
-                        src={previewUrl || placeholderImage}
+                        key={displayUrl}
+                        src={displayUrl || placeholderImage}
                         alt="Pré-visualização da foto de perfil"
                         width={80}
                         height={80}
@@ -106,7 +130,7 @@ function AboutForm() {
                         placeholder="https://exemplo.com/sua-foto.png"
                         {...register("profilePictureUrl")}
                     />
-                    <p className="text-sm text-muted-foreground">Cole o link direto da imagem (ex: terminado em .png, .jpg).</p>
+                    <p className="text-sm text-muted-foreground">Cole o link do Imgur ou o link direto da imagem (ex: terminado em .png, .jpg).</p>
                 </div>
             </div>
 
@@ -200,7 +224,7 @@ export default function SobreAdminPage() {
             paragraph1: "",
             paragraph2: "",
             paragraph3: "",
-            profilePictureUrl: "",
+            profilePictureUrl: "https://i.imgur.com/8HXi1Io.png",
         },
     });
 
@@ -259,3 +283,5 @@ export default function SobreAdminPage() {
         </Card>
     )
 }
+
+    
