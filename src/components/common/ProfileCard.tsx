@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import "./ProfileCard.css";
 
 interface ProfileCardProps {
-  avatarUrl: string;
+  avatarUrl?: string;
+  backgroundUrl?: string;
   iconUrl?: string;
   grainUrl?: string;
   behindGradient?: string;
@@ -58,6 +59,7 @@ const easeInOutCubic = (x: number): number =>
 
 const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   avatarUrl,
+  backgroundUrl,
   iconUrl,
   grainUrl,
   behindGradient,
@@ -303,6 +305,13 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
     [iconUrl, grainUrl, showBehindGradient, behindGradient, innerGradient]
   );
 
+  const cardBgStyle = useMemo(() => ({
+    backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : undefined,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }), [backgroundUrl]);
+
+
   const handleContactClick = useCallback(() => {
     onContactClick?.();
   }, [onContactClick]);
@@ -313,11 +322,11 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
       className={`pc-card-wrapper ${className}`.trim()}
       style={cardStyle}
     >
-      <section ref={cardRef} className="pc-card">
+      <section ref={cardRef} className="pc-card" style={cardBgStyle}>
         <div className="pc-inside">
           <div className="pc-shine" />
           <div className="pc-glare" />
-          <div className="pc-content pc-avatar-content">
+          {avatarUrl && <div className="pc-content pc-avatar-content">
             <img
               className="avatar"
               src={avatarUrl}
@@ -328,7 +337,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                 target.style.display = "none";
               }}
             />
-            {showUserInfo && (
+            </div>}
+             {showUserInfo && (
               <div className="pc-user-info">
                 <div className="pc-user-details">
                   <div className="pc-mini-avatar">
@@ -359,7 +369,6 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                 </button>
               </div>
             )}
-          </div>
           <div className="pc-content">
             <div className="pc-details">
               <h3>{name}</h3>
