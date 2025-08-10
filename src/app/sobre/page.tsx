@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { convertImgurLink } from '@/lib/utils';
+import { ContactSection } from '@/components/sections/contact';
 
 interface AboutData {
     mainParagraph: string;
