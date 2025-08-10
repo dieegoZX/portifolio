@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarInset, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
-import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -20,6 +20,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                   <Link href="/admin">
                     <LayoutDashboard />
                     <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Sobre">
+                  <Link href="/admin/sobre">
+                    <User />
+                    <span>Sobre</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
