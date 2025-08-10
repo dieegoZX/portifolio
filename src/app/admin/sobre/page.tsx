@@ -40,7 +40,9 @@ function AboutForm() {
     const previewUrl = watch("profilePictureUrl");
 
     useEffect(() => {
-        setImageError(false);
+        if (previewUrl) {
+            setImageError(false);
+        }
     }, [previewUrl]);
 
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
