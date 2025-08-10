@@ -30,7 +30,7 @@ export function TrafficManagementSection() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Gerenciamento de Tráfego Pago</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="max-w-[900px] text-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Atraia o público certo e converta visitantes em clientes com campanhas de tráfego pago eficientes.
             </p>
           </div>

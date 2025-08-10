@@ -68,7 +68,7 @@ export function PortfolioSection() {
         <div className="flex flex-col items-start justify-center space-y-4 text-left w-1/2 h-full">
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Portfólio de Projetos</h2>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="max-w-[600px] text-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Uma seleção de projetos que demonstram minhas habilidades em desenvolvimento front-end.
             </p>
              <Button asChild>
