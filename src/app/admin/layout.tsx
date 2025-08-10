@@ -1,7 +1,7 @@
 
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarInset, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
@@ -13,12 +13,19 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
     const { user, signOut, loading } = useAuth();
     const router = useRouter();
 
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push('/login');
+        }
+    }, [user, loading, router]);
+
+
     const handleLogout = async () => {
         await signOut();
         router.push('/login');
     };
     
-    if(loading) {
+    if(loading || !user) {
       return (
         <div className="flex h-screen items-center justify-center">
             <p>Carregando...</p>
