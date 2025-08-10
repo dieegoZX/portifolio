@@ -33,17 +33,9 @@ type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 function AboutForm() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const [imageError, setImageError] = useState(false);
-    const methods = useFormContext<AboutFormValues>();
-    const { register, handleSubmit, watch, formState: { errors } } = methods;
+    const { register, handleSubmit, watch, formState: { errors } } = useFormContext<AboutFormValues>();
 
     const previewUrl = watch("profilePictureUrl");
-
-    useEffect(() => {
-        if (previewUrl) {
-            setImageError(false);
-        }
-    }, [previewUrl]);
 
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
         startTransition(async () => {
@@ -92,7 +84,6 @@ function AboutForm() {
     }, [errors, toast]);
 
     const placeholderImage = "https://placehold.co/600x800.png";
-    const imageUrl = imageError || !previewUrl ? placeholderImage : previewUrl;
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -100,13 +91,12 @@ function AboutForm() {
                 <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
                  <div className="flex items-start gap-4">
                     <Image 
-                        src={imageUrl} 
+                        src={previewUrl || placeholderImage} 
                         alt="Pré-visualização da foto de perfil" 
                         width={80} 
                         height={80} 
                         className="rounded-full object-cover border" 
                         data-ai-hint="man developer portrait"
-                        onError={() => setImageError(true)}
                         key={previewUrl}
                     />
                     <div className="flex-grow space-y-2">
