@@ -33,16 +33,24 @@ type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
+    const [previewUrl, setPreviewUrl] = useState(initialData.profilePictureUrl);
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<AboutFormValues>({
         resolver: zodResolver(aboutInfoSchema),
         defaultValues: initialData,
     });
 
-    const profilePictureUrl = watch("profilePictureUrl");
+    const watchedUrl = watch("profilePictureUrl");
+
+    useEffect(() => {
+        setPreviewUrl(watchedUrl);
+    }, [watchedUrl]);
 
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
         startTransition(async () => {
             try {
+                if(!db) {
+                     throw new Error("Conexão com o banco de dados não estabelecida.");
+                }
                 const aboutDocRef = doc(db, 'about', 'main');
                 await setDoc(aboutDocRef, data, { merge: true });
 
@@ -89,14 +97,14 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
                 <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
                  <div className="flex items-start gap-4">
                     <Image 
-                        src={profilePictureUrl || "https://placehold.co/600x800.png"} 
+                        src={previewUrl || "https://placehold.co/600x800.png"} 
                         alt="Pré-visualização da foto de perfil" 
                         width={80} 
                         height={80} 
                         className="rounded-full object-cover border" 
                         data-ai-hint="man developer portrait"
-                        onError={() => setValue("profilePictureUrl", "https://placehold.co/600x800.png")}
-                        key={profilePictureUrl} // Force re-render on URL change
+                        onError={() => setPreviewUrl("https://placehold.co/600x800.png")}
+                        key={previewUrl}
                     />
                     <div className="flex-grow space-y-2">
                         <Input 
@@ -213,7 +221,15 @@ export default function SobreAdminPage() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setAboutData(docSnap.data() as AboutFormValues);
+                    const data = docSnap.data() as AboutFormValues;
+                    // Ensure all fields have a value to avoid uncontrolled component warnings
+                    setAboutData({
+                        mainParagraph: data.mainParagraph || "",
+                        paragraph1: data.paragraph1 || "",
+                        paragraph2: data.paragraph2 || "",
+                        paragraph3: data.paragraph3 || "",
+                        profilePictureUrl: data.profilePictureUrl || "",
+                    });
                 } else {
                     setAboutData({
                         mainParagraph: "",
