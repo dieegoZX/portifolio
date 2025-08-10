@@ -2,6 +2,7 @@ import { AppHeader } from '@/components/common/header';
 import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
 import { HeroSection } from '@/components/sections/hero';
+import { AboutSection } from '@/components/sections/about';
 import { PortfolioSection } from '@/components/sections/portfolio';
 import { LandingPagesSection } from '@/components/sections/landing-pages';
 import { TrafficManagementSection } from '@/components/sections/traffic-management';
@@ -17,6 +18,7 @@ export default function Home() {
       <AppHeader />
       <main className="flex-1">
         <HeroSection />
+        <AboutSection />
         <PortfolioSection />
         <LandingPagesSection />
         <TrafficManagementSection />

@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import GooeyNav from './gooey-nav';
 
 const navItems = [
+  { href: '/sobre', label: 'Sobre' },
   { href: '#portfolio', label: 'Projetos' },
   { href: '#landing-pages', label: 'Landing Pages' },
   { href: '#traffic', label: 'Tráfego Pago' },

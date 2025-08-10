@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import { usePathname } from 'next/navigation';
+import Link from "next/link";
 
 interface GooeyNavItem {
   label: string;
@@ -26,13 +28,19 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   particleR = 100,
   timeVariance = 300,
   colors = [1, 2, 3, 1, 2, 3, 1, 4],
-  initialActiveIndex = 0,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLUListElement>(null);
   const filterRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
-  const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
+  const pathname = usePathname();
+
+  const getInitialActiveIndex = () => {
+    const activeIndex = items.findIndex(item => item.href === pathname);
+    return activeIndex !== -1 ? activeIndex : 0;
+  }
+
+  const [activeIndex, setActiveIndex] = useState<number>(getInitialActiveIndex());
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
   const getXY = (
@@ -109,10 +117,20 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     Object.assign(textRef.current.style, styles);
     textRef.current.innerText = element.innerText;
   };
+
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     index: number
   ) => {
+     if (items[index].href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = items[index].href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
     const liEl = e.currentTarget.parentElement as HTMLElement;
     if (activeIndex === index) return;
     setActiveIndex(index);
@@ -130,6 +148,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       makeParticles(filterRef.current);
     }
   };
+
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLAnchorElement>,
     index: number
@@ -138,33 +157,54 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       e.preventDefault();
       const liEl = e.currentTarget.parentElement as HTMLElement;
       if (liEl) {
+         if (items[index].href.startsWith('#')) {
+            const targetId = items[index].href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else {
+            (e.currentTarget as HTMLAnchorElement).click();
+        }
+
         handleClick(
           {
-            currentTarget: liEl,
+            currentTarget: e.currentTarget,
           } as any,
           index
         );
       }
     }
   };
+
+ useEffect(() => {
+    setActiveIndex(getInitialActiveIndex());
+  }, [pathname, items]);
+
+
   useEffect(() => {
     if (!navRef.current || !containerRef.current) return;
-    const activeLi = navRef.current.querySelectorAll("li")[
-      activeIndex
-    ] as HTMLElement;
-    if (activeLi) {
-      updateEffectPosition(activeLi);
-      textRef.current?.classList.add("active");
+
+    const updatePosition = () => {
+        const activeLi = navRef.current?.querySelectorAll("li")[
+            activeIndex
+        ] as HTMLElement;
+        if (activeLi) {
+            updateEffectPosition(activeLi);
+             if(!textRef.current?.classList.contains('active')) {
+                textRef.current?.classList.add("active");
+            }
+        }
     }
+
+    updatePosition();
+    
     const resizeObserver = new ResizeObserver(() => {
-      const currentActiveLi = navRef.current?.querySelectorAll("li")[
-        activeIndex
-      ] as HTMLElement;
-      if (currentActiveLi) {
-        updateEffectPosition(currentActiveLi);
-      }
+      updatePosition();
     });
+
     resizeObserver.observe(containerRef.current);
+    
     return () => resizeObserver.disconnect();
   }, [activeIndex]);
 
@@ -193,7 +233,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             transition: color 0.3s ease;
           }
           .effect.text.active {
-            color: hsl(var(--background));
+            color: hsl(var(--primary-foreground));
           }
           .effect.filter {
             filter: blur(7px) contrast(100) blur(0);
@@ -210,7 +250,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             content: "";
             position: absolute;
             inset: 0;
-            background: hsl(var(--foreground));
+            background: hsl(var(--primary));
             transform: scale(0);
             opacity: 0;
             z-index: -1;
@@ -292,8 +332,11 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
               opacity: 0;
             }
           }
-          li.active {
-            color: hsl(var(--background));
+          li a {
+             color: hsl(var(--foreground));
+          }
+          li.active a {
+            color: hsl(var(--primary-foreground));
             text-shadow: none;
           }
           li.active::after {
@@ -305,7 +348,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             position: absolute;
             inset: 0;
             border-radius: 8px;
-            background: hsl(var(--foreground));
+            background: hsl(var(--primary));
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;
@@ -322,25 +365,24 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             ref={navRef}
             className="flex gap-8 list-none p-0 px-4 m-0 relative z-[3]"
             style={{
-              color: "hsl(var(--foreground))",
               textShadow: "0 1px 1px hsl(205deg 30% 10% / 0.2)",
             }}
           >
             {items.map((item, index) => (
               <li
                 key={index}
-                className={`rounded-full relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-foreground ${
+                className={`rounded-full relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] ${
                   activeIndex === index ? "active" : ""
                 }`}
               >
-                <a
+                <Link
                   href={item.href}
-                  onClick={(e) => handleClick(e, index)}
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => handleClick(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   className="outline-none py-[0.6em] px-[1em] inline-block"
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
