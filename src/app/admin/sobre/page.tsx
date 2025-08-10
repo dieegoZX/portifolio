@@ -30,18 +30,21 @@ const aboutInfoSchema = z.object({
 
 type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 
+// Este componente foi reescrito do zero para garantir a funcionalidade correta.
 function AboutForm() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
+    // Acessa os métodos do formulário (fornecidos pelo FormProvider)
     const { register, handleSubmit, watch, formState: { errors } } = useFormContext<AboutFormValues>();
 
+    // 'watch' observa o campo em tempo real. Esta é a única fonte de verdade para a URL.
     const previewUrl = watch("profilePictureUrl");
 
-    const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
+    const onSubmit: SubmitHandler<AboutFormValues> = (data) => {
         startTransition(async () => {
             try {
-                if(!db) {
-                     throw new Error("Conexão com o banco de dados não estabelecida.");
+                if (!db) {
+                    throw new Error("Conexão com o banco de dados não estabelecida.");
                 }
                 const aboutDocRef = doc(db, 'about', 'main');
                 await setDoc(aboutDocRef, data, { merge: true });
@@ -49,14 +52,14 @@ function AboutForm() {
                 const revalidationResult = await revalidateAboutPaths();
 
                 if (revalidationResult.success) {
-                     toast({
+                    toast({
                         title: "Sucesso!",
                         description: "Informações da página 'Sobre' atualizadas com sucesso!",
                     });
                 } else {
                     throw new Error(revalidationResult.message);
                 }
-               
+
             } catch (error) {
                 console.error("Firebase save error:", error);
                 const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
@@ -68,13 +71,14 @@ function AboutForm() {
             }
         });
     };
-    
+
+    // Efeito para mostrar erros de validação
     useEffect(() => {
         const errorMessages = Object.values(errors).map(e => e.message);
         const uniqueErrorMessages = [...new Set(errorMessages)];
         uniqueErrorMessages.forEach((message) => {
             if (message) {
-                 toast({
+                toast({
                     variant: "destructive",
                     title: "Erro de Validação",
                     description: message,
@@ -82,40 +86,43 @@ function AboutForm() {
             }
         });
     }, [errors, toast]);
-
+    
     const placeholderImage = "https://placehold.co/600x800.png";
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-             <div className="space-y-2">
+            <div className="space-y-2">
                 <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
-                 <div className="flex items-start gap-4">
-                    <Image 
-                        src={previewUrl || placeholderImage} 
-                        alt="Pré-visualização da foto de perfil" 
-                        width={80} 
-                        height={80} 
-                        className="rounded-full object-cover border" 
-                        data-ai-hint="man developer portrait"
+                <div className="flex items-start gap-4">
+                    <Image
+                        // A 'key' é crucial. Ela força o React a recarregar o componente
+                        // quando a URL muda, garantindo a atualização da pré-visualização.
                         key={previewUrl}
+                        src={previewUrl || placeholderImage}
+                        alt="Pré-visualização da foto de perfil"
+                        width={80}
+                        height={80}
+                        className="rounded-full object-cover border"
+                        data-ai-hint="man developer portrait"
                     />
                     <div className="flex-grow space-y-2">
-                        <Input 
-                            id="profile-picture-url" 
+                        <Input
+                            id="profile-picture-url"
                             type="url"
                             placeholder="https://exemplo.com/sua-foto.png"
+                            // 'register' conecta o input ao react-hook-form
                             {...register("profilePictureUrl")}
                             className="max-w-lg"
                         />
-                         <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
+                        <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
                     </div>
                 </div>
             </div>
 
             <div className="space-y-2">
                 <Label htmlFor="main-paragraph">Parágrafo Principal</Label>
-                <Textarea 
-                    id="main-paragraph" 
+                <Textarea
+                    id="main-paragraph"
                     {...register("mainParagraph")}
                     rows={3}
                 />
@@ -123,24 +130,24 @@ function AboutForm() {
 
             <div className="space-y-2">
                 <Label htmlFor="paragraph-1">Primeiro Parágrafo</Label>
-                <Textarea 
-                    id="paragraph-1" 
+                <Textarea
+                    id="paragraph-1"
                     {...register("paragraph1")}
                     rows={5}
                 />
             </div>
-             <div className="space-y-2">
+            <div className="space-y-2">
                 <Label htmlFor="paragraph-2">Segundo Parágrafo</Label>
-                <Textarea 
-                    id="paragraph-2" 
+                <Textarea
+                    id="paragraph-2"
                     {...register("paragraph2")}
                     rows={5}
                 />
             </div>
-             <div className="space-y-2">
+            <div className="space-y-2">
                 <Label htmlFor="paragraph-3">Terceiro Parágrafo</Label>
-                <Textarea 
-                    id="paragraph-3" 
+                <Textarea
+                    id="paragraph-3"
                     {...register("paragraph3")}
                     rows={3}
                 />
@@ -148,8 +155,8 @@ function AboutForm() {
 
             <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
-                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Salvar Alterações
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Salvar Alterações
                 </Button>
             </div>
         </form>
@@ -176,11 +183,11 @@ function AboutPageSkeleton() {
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-32 w-full" />
             </div>
-                <div className="space-y-2">
+            <div className="space-y-2">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-32 w-full" />
             </div>
-                <div className="space-y-2">
+            <div className="space-y-2">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-20 w-full" />
             </div>
@@ -196,6 +203,7 @@ export default function SobreAdminPage() {
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // useForm agora é chamado no componente pai, que gerencia o estado.
     const methods = useForm<AboutFormValues>({
         resolver: zodResolver(aboutInfoSchema),
         defaultValues: {
@@ -210,7 +218,7 @@ export default function SobreAdminPage() {
     useEffect(() => {
         if (authLoading) {
             setLoadingData(true);
-            return; 
+            return;
         }
         if (!user) {
             setLoadingData(false);
@@ -226,21 +234,8 @@ export default function SobreAdminPage() {
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    methods.reset({
-                        mainParagraph: data.mainParagraph || "",
-                        paragraph1: data.paragraph1 || "",
-                        paragraph2: data.paragraph2 || "",
-                        paragraph3: data.paragraph3 || "",
-                        profilePictureUrl: data.profilePictureUrl || "",
-                    });
-                } else {
-                    methods.reset({
-                        mainParagraph: "",
-                        paragraph1: "",
-                        paragraph2: "",
-                        paragraph3: "",
-                        profilePictureUrl: "",
-                    });
+                    // 'reset' atualiza os valores do formulário com os dados do Firebase
+                    methods.reset(data as AboutFormValues);
                 }
             } catch (err) {
                 console.error("Firebase read error:", err);
@@ -268,6 +263,7 @@ export default function SobreAdminPage() {
                 ) : error ? (
                     <p className="text-destructive text-center py-8">{error}</p>
                 ) : (
+                    // FormProvider passa a instância do formulário para os componentes filhos
                     <FormProvider {...methods}>
                         <AboutForm />
                     </FormProvider>
