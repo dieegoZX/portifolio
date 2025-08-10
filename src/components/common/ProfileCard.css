@@ -1,5 +1,58 @@
-/* 
-  All complex styles were removed from this file to resolve critical rendering bugs.
-  The necessary simplified styles have been moved to globals.css to ensure 
-  the background image displays correctly.
-*/
+:root {
+  --card-bg-image: none;
+}
+
+.pc-card-wrapper {
+  perspective: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pc-card {
+  height: 80vh;
+  max-height: 540px;
+  width: 100%;
+  aspect-ratio: 0.718;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  background-image: var(--card-bg-image);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pc-inside {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.pc-content {
+  color: white;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  backdrop-filter: blur(5px);
+}
+
+.pc-details h3 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.pc-details p {
+  font-size: 1.25rem;
+  margin: 0;
+  opacity: 0.9;
+}

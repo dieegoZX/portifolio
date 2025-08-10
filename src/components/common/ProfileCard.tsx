@@ -1,13 +1,15 @@
+
 "use client";
 
 import React from "react";
-import "./ProfileCard.css";
+import './ProfileCard.css';
 
 interface ProfileCardProps {
   backgroundUrl?: string;
   name?: string;
   title?: string;
   className?: string;
+  showUserInfo?: boolean;
 }
 
 const ProfileCardComponent: React.FC<ProfileCardProps> = ({
@@ -15,22 +17,26 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   name = "Diego Ruan",
   title = "Desenvolvedor",
   className = "",
+  showUserInfo = true,
 }) => {
 
   const cardStyle = {
-    backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : 'none',
-  };
+    '--card-bg-image': backgroundUrl ? `url(${backgroundUrl})` : 'none',
+  } as React.CSSProperties;
 
   return (
     <div className={`pc-card-wrapper ${className}`.trim()}>
-      <div className="pc-card" style={cardStyle}>
-        <div className="pc-content">
-          <div className="pc-details">
-            <h3>{name}</h3>
-            <p>{title}</p>
-          </div>
-        </div>
-      </div>
+      <section className="pc-card" style={cardStyle}>
+        <div className="pc-inside" />
+        {showUserInfo && (
+            <div className="pc-content">
+                <div className="pc-details">
+                    <h3>{name}</h3>
+                    <p>{title}</p>
+                </div>
+            </div>
+        )}
+      </section>
     </div>
   );
 };
