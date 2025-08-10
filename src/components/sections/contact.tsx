@@ -48,7 +48,7 @@ export function ContactSection() {
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Vamos trabalhar juntos?</h2>
-          <p className="mx-auto max-w-[600px] text-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+          <p className="mx-auto max-w-[600px] text-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
             Preencha o formulário abaixo e retornarei o mais breve possível.
           </p>
         </div>
