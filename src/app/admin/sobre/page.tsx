@@ -6,7 +6,6 @@ import { useForm, SubmitHandler, FormProvider, useFormContext } from 'react-hook
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
-import Image from "next/image";
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { revalidateAboutPaths } from '@/app/actions';
@@ -87,22 +86,20 @@ function AboutForm() {
         });
     }, [errors, toast]);
     
-    const placeholderImage = "https://placehold.co/600x800.png";
+    const placeholderImage = "https://placehold.co/80x80.png";
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
              <div className="flex gap-6 items-start">
                 <div className="space-y-2 flex-shrink-0">
                     <Label>Pré-visualização</Label>
-                    <Image
-                        // A 'key' é crucial. Ela força o React a recarregar o componente
-                        // quando a URL muda, garantindo a atualização da pré-visualização.
+                    <img
                         key={previewUrl}
                         src={previewUrl || placeholderImage}
                         alt="Pré-visualização da foto de perfil"
                         width={80}
                         height={80}
-                        className="rounded-full object-cover border"
+                        className="rounded-full object-cover border h-20 w-20"
                         data-ai-hint="man developer portrait"
                     />
                 </div>
@@ -272,3 +269,5 @@ export default function SobreAdminPage() {
         </Card>
     )
 }
+
+    
