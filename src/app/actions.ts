@@ -2,6 +2,8 @@
 'use server';
 
 import { z } from 'zod';
+import { updateAboutData, getAboutData } from '@/services/about';
+import { revalidatePath } from 'next/cache';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres.'),
@@ -68,16 +70,16 @@ export async function updateAboutInfo(prevState: any, formData: FormData): Promi
         };
     }
     
-    // In a real app, you would save this to a database.
-    console.log('Updating about info:', validatedFields.data);
+    const textData = validatedFields.data;
     const profilePicture = formData.get('profilePicture') as File;
-    if(profilePicture && profilePicture.size > 0) {
-        console.log('New profile picture uploaded:', profilePicture.name, `${profilePicture.size / 1024}KB`);
-    }
 
     try {
-        // Simulate saving data
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await updateAboutData(textData, profilePicture);
+        
+        // Revalidate paths to show updated info immediately
+        revalidatePath('/');
+        revalidatePath('/sobre');
+        revalidatePath('/admin/sobre');
 
         return {
             success: true,
@@ -85,9 +87,10 @@ export async function updateAboutInfo(prevState: any, formData: FormData): Promi
         };
     } catch (error) {
         console.error('Error updating about info:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
         return {
             success: false,
-            message: 'Ocorreu um erro ao salvar as informações. Tente novamente.',
+            message: `Ocorreu um erro ao salvar as informações: ${errorMessage}`,
         };
     }
 }
