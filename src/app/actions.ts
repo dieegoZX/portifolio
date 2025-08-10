@@ -50,48 +50,22 @@ export async function submitContactForm(prevState: any, formData: FormData): Pro
   }
 }
 
-const aboutInfoSchema = z.object({
-    mainParagraph: z.string().min(10),
-    paragraph1: z.string().min(10),
-    paragraph2: z.string().min(10),
-    paragraph3: z.string().min(10),
-    profilePictureUrl: z.string().url("Por favor, insira um URL válido."),
-});
-
-export async function updateAboutInfo(prevState: any, formData: FormData): Promise<State> {
-    const validatedFields = aboutInfoSchema.safeParse({
-        mainParagraph: formData.get('mainParagraph'),
-        paragraph1: formData.get('paragraph1'),
-        paragraph2: formData.get('paragraph2'),
-        paragraph3: formData.get('paragraph3'),
-        profilePictureUrl: formData.get('profilePictureUrl'),
-    });
-
-    if (!validatedFields.success) {
-        return {
-            success: false,
-            message: validatedFields.error.errors.map(e => e.message).join(', '),
-        };
-    }
-    
+// This action is now only responsible for revalidating paths.
+// The actual database write operation is handled on the client-side.
+export async function revalidateAboutPaths() {
     try {
-        const aboutDocRef = doc(db, 'about', 'main');
-        await setDoc(aboutDocRef, validatedFields.data, { merge: true });
-        
         revalidatePath('/');
         revalidatePath('/sobre');
         revalidatePath('/admin/sobre');
-
         return {
             success: true,
             message: 'Informações da página "Sobre" atualizadas com sucesso!',
         };
-    } catch (error) {
-        console.error('Error updating about info:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
-        return {
+    } catch(error) {
+         console.error('Error revalidating about paths:', error);
+         return {
             success: false,
-            message: `Ocorreu um erro ao salvar as informações: ${errorMessage}`,
+            message: 'Ocorreu um erro ao atualizar o cache da página.',
         };
     }
 }
