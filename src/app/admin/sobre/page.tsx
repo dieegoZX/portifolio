@@ -43,9 +43,11 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     const onSubmit: SubmitHandler<AboutFormValues> = async (data) => {
         startTransition(async () => {
             try {
+                // Client-side write operation
                 const aboutDocRef = doc(db, 'about', 'main');
                 await setDoc(aboutDocRef, data, { merge: true });
 
+                // Server-side cache revalidation
                 const revalidationResult = await revalidateAboutPaths();
 
                 if (revalidationResult.success) {
@@ -67,14 +69,17 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
             }
         });
     };
-
+    
+    // Display validation errors as toasts
     useEffect(() => {
-        Object.entries(errors).forEach(([, error]) => {
-            if (error?.message) {
-                toast({
+        const errorMessages = Object.values(errors).map(e => e.message);
+        const uniqueErrorMessages = [...new Set(errorMessages)];
+        uniqueErrorMessages.forEach((message) => {
+            if (message) {
+                 toast({
                     variant: "destructive",
                     title: "Erro de Validação",
-                    description: error.message,
+                    description: message,
                 });
             }
         });
@@ -93,7 +98,7 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
                         className="rounded-full object-cover border" 
                         data-ai-hint="man developer portrait"
                         onError={() => setValue("profilePictureUrl", "https://placehold.co/600x800.png")}
-                        key={profilePictureUrl}
+                        key={profilePictureUrl} // Force re-render on URL change
                     />
                     <div className="flex-grow space-y-2">
                         <Input 
@@ -152,42 +157,81 @@ function AboutForm({ initialData }: { initialData: AboutFormValues }) {
     );
 }
 
+
+function AboutPageSkeleton() {
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center gap-4">
+                <Skeleton className="h-20 w-20 rounded-full" />
+                <div className="flex-grow space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-10 w-full max-w-lg" />
+                    <Skeleton className="h-4 w-[300px]" />
+                </div>
+            </div>
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-20 w-full" />
+            </div>
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-32 w-full" />
+            </div>
+                <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-32 w-full" />
+            </div>
+                <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-20 w-full" />
+            </div>
+            <div className="flex justify-end">
+                <Skeleton className="h-10 w-36" />
+            </div>
+        </div>
+    )
+}
+
 export default function SobreAdminPage() {
-    const { user } = useAuth();
+    const { user } = useAuth(); // Auth context provides user session info
     const [aboutData, setAboutData] = useState<AboutFormValues | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!user) return; // Wait for user to be authenticated
+        // We need an authenticated user to fetch data for their specific 'about' page
+        if (!user) return; 
 
         async function fetchData() {
+            setLoading(true);
+            setError(null);
             try {
-                setLoading(true);
-                setError(null);
                 const docRef = doc(db, 'about', 'main');
                 const docSnap = await getDoc(docRef);
+
                 if (docSnap.exists()) {
                     setAboutData(docSnap.data() as AboutFormValues);
                 } else {
+                    // Set default empty data if the document doesn't exist yet
                     setAboutData({
                         mainParagraph: "",
                         paragraph1: "",
                         paragraph2: "",
                         paragraph3: "",
                         profilePictureUrl: "",
-                    })
-                    console.log("No such document! Setting default data.");
+                    });
                 }
             } catch (err) {
                 console.error("Firebase read error:", err);
-                setError(err instanceof Error ? err.message : 'Falha ao carregar os dados.');
+                const errorMessage = err instanceof Error ? err.message : 'Falha ao carregar os dados.';
+                setError(errorMessage);
             } finally {
                 setLoading(false);
             }
         }
+
         fetchData();
-    }, [user]);
+    }, [user]); // Rerun effect when user object changes
 
     return (
         <Card>
@@ -196,34 +240,8 @@ export default function SobreAdminPage() {
                 <CardDescription>Atualize as informações da sua página "Sobre Mim".</CardDescription>
             </CardHeader>
             <CardContent>
-                {loading && (
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <Skeleton className="h-20 w-20 rounded-full" />
-                            <div className="space-y-2">
-                                <Skeleton className="h-10 w-[400px]" />
-                                <Skeleton className="h-4 w-[300px]" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-20 w-full" />
-                        </div>
-                        <div className="space-y-2">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-32 w-full" />
-                        </div>
-                         <div className="space-y-2">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-32 w-full" />
-                        </div>
-                         <div className="space-y-2">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-20 w-full" />
-                        </div>
-                    </div>
-                )}
-                {error && <p className="text-destructive">{error}</p>}
+                {loading && <AboutPageSkeleton />}
+                {error && <p className="text-destructive text-center py-8">{error}</p>}
                 {!loading && !error && aboutData && <AboutForm initialData={aboutData} />}
             </CardContent>
         </Card>

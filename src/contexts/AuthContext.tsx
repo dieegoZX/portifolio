@@ -4,7 +4,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { onAuthStateChanged, User, signOut as firebaseSignOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import Cookies from 'js-cookie';
 
 interface AuthContextType {
   user: User | null;
@@ -19,24 +18,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    // onAuthStateChanged is the recommended way to get the current user.
+    // It sets up an observer that runs whenever the user's sign-in state changes.
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
-       if (user) {
-        user.getIdToken().then(token => {
-          Cookies.set('firebase-auth-token', token, { secure: true, sameSite: 'strict' });
-        });
-      } else {
-        Cookies.remove('firebase-auth-token');
-      }
     });
 
+    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
   
   const signOut = async () => {
+    // signOut is handled by the firebase SDK
     await firebaseSignOut(auth);
-    Cookies.remove('firebase-auth-token');
+    // The onAuthStateChanged observer will automatically update the user state to null
   };
 
   return (
