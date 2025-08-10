@@ -113,16 +113,23 @@ export async function saveTestimonial(id: string | null, data: z.infer<typeof te
 
         const validatedData = testimonialSchema.parse(data);
         
+        let docRef;
+        let dataToSave;
+
         if (id) {
-            const testimonialRef = doc(db, 'testimonials', id);
-            await setDoc(testimonialRef, validatedData, { merge: true });
+            docRef = doc(db, 'testimonials', id);
+            dataToSave = validatedData;
         } else {
-            const testimonialsCollection = collection(db, 'testimonials');
-            await addDoc(testimonialsCollection, {
+            const newDocRef = doc(collection(db, 'testimonials'));
+            docRef = newDocRef;
+            dataToSave = {
                 ...validatedData,
                 createdAt: serverTimestamp(),
-            });
+            };
         }
+
+        await setDoc(docRef, dataToSave, { merge: true });
+
         revalidatePath('/admin/depoimentos');
         revalidatePath('/');
     } catch (error) {
@@ -152,16 +159,23 @@ export async function saveProject(id: string | null, data: z.infer<typeof projec
 
         const validatedData = projectSchema.parse(data);
 
+        let docRef;
+        let dataToSave;
+
         if (id) {
-            const projectRef = doc(db, 'projects', id);
-            await setDoc(projectRef, validatedData, { merge: true });
+            docRef = doc(db, 'projects', id);
+            dataToSave = validatedData;
         } else {
-            const projectsCollection = collection(db, 'projects');
-            await addDoc(projectsCollection, {
+            const newDocRef = doc(collection(db, 'projects'));
+            docRef = newDocRef;
+            dataToSave = {
                 ...validatedData,
                 createdAt: serverTimestamp(),
-            });
+            };
         }
+        
+        await setDoc(docRef, dataToSave, { merge: true });
+
         revalidatePath('/admin/projetos');
         revalidatePath('/');
     } catch (error) {
@@ -190,16 +204,23 @@ export async function saveLandingPage(id: string | null, data: z.infer<typeof la
 
         const validatedData = landingPageSchema.parse(data);
 
+        let docRef;
+        let dataToSave;
+
         if (id) {
-            const landingPageRef = doc(db, 'landingPages', id);
-            await setDoc(landingPageRef, validatedData, { merge: true });
+            docRef = doc(db, 'landingPages', id);
+            dataToSave = validatedData;
         } else {
-            const landingPagesCollection = collection(db, 'landingPages');
-            await addDoc(landingPagesCollection, {
+            const newDocRef = doc(collection(db, 'landingPages'));
+            docRef = newDocRef;
+            dataToSave = {
                 ...validatedData,
                 createdAt: serverTimestamp(),
-            });
+            };
         }
+
+        await setDoc(docRef, dataToSave, { merge: true });
+
         revalidatePath('/admin/landing-pages');
         revalidatePath('/');
     } catch (error) {
