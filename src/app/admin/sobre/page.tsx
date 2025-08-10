@@ -39,9 +39,6 @@ function AboutForm({ initialData }: { initialData: AboutData }) {
                 title: "Sucesso!",
                 description: state.message,
             });
-             if (state.message.includes("atualizadas com sucesso")) {
-                // Potentially update preview image if a new one was uploaded and URL is returned
-            }
         } else if (state?.success === false && state.message) {
             toast({
                 variant: "destructive",
@@ -50,39 +47,38 @@ function AboutForm({ initialData }: { initialData: AboutData }) {
             });
         }
     }, [state, toast]);
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewImage(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
+    
+    const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPreviewImage(event.target.value);
     };
+
 
     return (
         <form ref={formRef} action={formAction} className="space-y-6">
-            <div className="space-y-2">
-                <Label htmlFor="profile-picture">Foto de Perfil</Label>
-                <div className="flex items-center gap-4">
+             <div className="space-y-2">
+                <Label htmlFor="profile-picture-url">URL da Foto de Perfil</Label>
+                 <div className="flex items-start gap-4">
                     <Image 
                         src={previewImage || "https://placehold.co/600x800.png"} 
-                        alt="Foto de perfil" 
+                        alt="Pré-visualização da foto de perfil" 
                         width={80} 
                         height={80} 
-                        className="rounded-full object-cover" 
-                        data-ai-hint="man developer portrait" 
+                        className="rounded-full object-cover border" 
+                        data-ai-hint="man developer portrait"
+                        onError={() => setPreviewImage("https://placehold.co/600x800.png")}
                     />
-                    <Input 
-                        id="profile-picture" 
-                        name="profilePicture" 
-                        type="file" 
-                        className="max-w-sm"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                    />
+                    <div className="flex-grow space-y-2">
+                        <Input 
+                            id="profile-picture-url" 
+                            name="profilePictureUrl" 
+                            type="url"
+                            placeholder="https://exemplo.com/sua-foto.png"
+                            defaultValue={initialData.profilePictureUrl}
+                            onChange={handleUrlChange}
+                            className="max-w-lg"
+                        />
+                         <p className="text-sm text-muted-foreground">Cole o link de uma imagem hospedada publicamente.</p>
+                    </div>
                 </div>
             </div>
 
@@ -162,7 +158,10 @@ export default function SobreAdminPage() {
                     <div className="space-y-6">
                         <div className="flex items-center gap-4">
                             <Skeleton className="h-20 w-20 rounded-full" />
-                            <Skeleton className="h-10 w-sm max-w-sm" />
+                            <div className="space-y-2">
+                                <Skeleton className="h-10 w-[400px]" />
+                                <Skeleton className="h-4 w-[300px]" />
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-32" />

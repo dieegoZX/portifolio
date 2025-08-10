@@ -53,6 +53,7 @@ const aboutInfoSchema = z.object({
     paragraph1: z.string().min(10),
     paragraph2: z.string().min(10),
     paragraph3: z.string().min(10),
+    profilePictureUrl: z.string().url("Por favor, insira um URL válido."),
 });
 
 export async function updateAboutInfo(prevState: any, formData: FormData): Promise<State> {
@@ -61,22 +62,19 @@ export async function updateAboutInfo(prevState: any, formData: FormData): Promi
         paragraph1: formData.get('paragraph1'),
         paragraph2: formData.get('paragraph2'),
         paragraph3: formData.get('paragraph3'),
+        profilePictureUrl: formData.get('profilePictureUrl'),
     });
 
     if (!validatedFields.success) {
         return {
             success: false,
-            message: "Todos os campos de texto devem ser preenchidos.",
+            message: validatedFields.error.errors.map(e => e.message).join(', '),
         };
     }
     
-    const textData = validatedFields.data;
-    const profilePicture = formData.get('profilePicture') as File;
-
     try {
-        await updateAboutData(textData, profilePicture);
+        await updateAboutData(validatedFields.data);
         
-        // Revalidate paths to show updated info immediately
         revalidatePath('/');
         revalidatePath('/sobre');
         revalidatePath('/admin/sobre');

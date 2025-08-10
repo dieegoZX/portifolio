@@ -1,7 +1,6 @@
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 
 const ABOUT_DOC_ID = 'main';
 const ABOUT_COLLECTION_ID = 'about';
@@ -11,7 +10,7 @@ export interface AboutData {
     paragraph1: string;
     paragraph2: string;
     paragraph3: string;
-    profilePictureUrl?: string;
+    profilePictureUrl: string;
 }
 
 const defaultAboutData: AboutData = {
@@ -37,20 +36,7 @@ export async function getAboutData(): Promise<AboutData> {
 }
 
 // Function to update about data in Firestore
-export async function updateAboutData(textData: Omit<AboutData, 'profilePictureUrl'>, imageFile?: File): Promise<void> {
+export async function updateAboutData(data: AboutData): Promise<void> {
     const docRef = doc(db, ABOUT_COLLECTION_ID, ABOUT_DOC_ID);
-    let imageUrl = (await getAboutData()).profilePictureUrl; // Get current image url
-
-    if (imageFile && imageFile.size > 0) {
-        const storageRef = ref(storage, `profilePictures/${ABOUT_DOC_ID}`);
-        const snapshot = await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(snapshot.ref);
-    }
-
-    const dataToSave: AboutData = {
-        ...textData,
-        profilePictureUrl: imageUrl
-    };
-
-    await setDoc(docRef, dataToSave, { merge: true });
+    await setDoc(docRef, data, { merge: true });
 }
