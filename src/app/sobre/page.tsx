@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { AppHeader } from '@/components/common/header';
 import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
