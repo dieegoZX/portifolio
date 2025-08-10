@@ -152,7 +152,14 @@ export default function SobreAdminPage() {
                     setAboutData(docSnap.data() as AboutData);
                 } else {
                      // Você pode definir dados padrão ou lidar com o caso de não existência aqui
-                    console.log("No such document!");
+                    setAboutData({
+                        mainParagraph: "",
+                        paragraph1: "",
+                        paragraph2: "",
+                        paragraph3: "",
+                        profilePictureUrl: "",
+                    })
+                    console.log("No such document! Setting default data.");
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Falha ao carregar os dados.');
