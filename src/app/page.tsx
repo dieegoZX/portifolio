@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="fixed inset-0 -z-10">
-        <LetterGlitch />
+        <LetterGlitch outerVignette={false} />
       </div>
       <AppHeader />
       <main className="flex-1">
