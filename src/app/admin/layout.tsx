@@ -1,9 +1,31 @@
+
+'use client';
+
 import { ReactNode } from 'react';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarInset, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
-import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings, User } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Image, MessageSquare, Settings, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+function AdminLayoutContent({ children }: { children: ReactNode }) {
+    const { user, signOut, loading } = useAuth();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await signOut();
+        router.push('/login');
+    };
+    
+    if(loading) {
+      return (
+        <div className="flex h-screen items-center justify-center">
+            <p>Carregando...</p>
+        </div>
+      )
+    }
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
@@ -66,6 +88,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleLogout} tooltip="Sair">
+                      <LogOut />
+                      <span>Sair</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </div>
           </div>
@@ -84,4 +112,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </div>
     </SidebarProvider>
   );
+}
+
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
+    return (
+        <AuthProvider>
+            <AdminLayoutContent>{children}</AdminLayoutContent>
+        </AuthProvider>
+    )
 }
