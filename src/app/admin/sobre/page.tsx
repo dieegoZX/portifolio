@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
@@ -30,14 +30,12 @@ const aboutInfoSchema = z.object({
 
 type AboutFormValues = z.infer<typeof aboutInfoSchema>;
 
-function AboutForm({ initialData }: { initialData: AboutFormValues }) {
+function AboutForm() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
     const [imageError, setImageError] = useState(false);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<AboutFormValues>({
-        resolver: zodResolver(aboutInfoSchema),
-        defaultValues: initialData,
-    });
+    const methods = useFormContext<AboutFormValues>();
+    const { register, handleSubmit, watch, formState: { errors } } = methods;
 
     const previewUrl = watch("profilePictureUrl");
 
@@ -203,12 +201,23 @@ function AboutPageSkeleton() {
 
 export default function SobreAdminPage() {
     const { user, loading: authLoading } = useAuth();
-    const [aboutData, setAboutData] = useState<AboutFormValues | null>(null);
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const methods = useForm<AboutFormValues>({
+        resolver: zodResolver(aboutInfoSchema),
+        defaultValues: {
+            mainParagraph: "",
+            paragraph1: "",
+            paragraph2: "",
+            paragraph3: "",
+            profilePictureUrl: "",
+        },
+    });
+
     useEffect(() => {
         if (authLoading) {
+            setLoadingData(true);
             return; 
         }
         if (!user) {
@@ -224,9 +233,8 @@ export default function SobreAdminPage() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    const data = docSnap.data() as AboutFormValues;
-                    // Ensure all fields have a value to avoid uncontrolled component warnings
-                    setAboutData({
+                    const data = docSnap.data();
+                    methods.reset({
                         mainParagraph: data.mainParagraph || "",
                         paragraph1: data.paragraph1 || "",
                         paragraph2: data.paragraph2 || "",
@@ -234,7 +242,7 @@ export default function SobreAdminPage() {
                         profilePictureUrl: data.profilePictureUrl || "",
                     });
                 } else {
-                    setAboutData({
+                    methods.reset({
                         mainParagraph: "",
                         paragraph1: "",
                         paragraph2: "",
@@ -252,7 +260,7 @@ export default function SobreAdminPage() {
         }
 
         fetchData();
-    }, [user, authLoading]);
+    }, [user, authLoading, methods]);
 
     const isLoading = authLoading || loadingData;
 
@@ -263,9 +271,15 @@ export default function SobreAdminPage() {
                 <CardDescription>Atualize as informações da sua página "Sobre Mim".</CardDescription>
             </CardHeader>
             <CardContent>
-                {isLoading && <AboutPageSkeleton />}
-                {error && <p className="text-destructive text-center py-8">{error}</p>}
-                {!isLoading && !error && aboutData && <AboutForm initialData={aboutData} />}
+                {isLoading ? (
+                    <AboutPageSkeleton />
+                ) : error ? (
+                    <p className="text-destructive text-center py-8">{error}</p>
+                ) : (
+                    <FormProvider {...methods}>
+                        <AboutForm />
+                    </FormProvider>
+                )}
             </CardContent>
         </Card>
     )
