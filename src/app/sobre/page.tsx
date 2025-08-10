@@ -6,7 +6,6 @@ import { AppHeader } from '@/components/common/header';
 import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
 import ProfileCard from '@/components/common/ProfileCard';
-import '@/components/common/ProfileCard.css';
 import { Skeleton } from '@/components/ui/skeleton';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -84,7 +83,6 @@ export default function SobrePage() {
                       backgroundUrl={aboutData.profilePictureUrl}
                       name="Diego Ruan"
                       title="Desenvolvedor"
-                      showUserInfo={false}
                     />
                 </div>
                 <div className="flex flex-col justify-center space-y-4">

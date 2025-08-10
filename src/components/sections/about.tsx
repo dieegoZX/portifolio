@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { MoveRight } from 'lucide-react';
 import ProfileCard from '../common/ProfileCard';
-import '@/components/common/ProfileCard.css';
 import { Skeleton } from '@/components/ui/skeleton';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -74,7 +73,6 @@ export function AboutSection() {
                     backgroundUrl={aboutData?.profilePictureUrl}
                     name="Diego Ruan"
                     title="Desenvolvedor"
-                    showUserInfo={false}
                     className="w-full max-w-sm"
                   />
                 )}
