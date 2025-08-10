@@ -14,8 +14,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { getAboutData, AboutData } from '@/services/about';
 import { Skeleton } from '@/components/ui/skeleton';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
+export interface AboutData {
+    mainParagraph: string;
+    paragraph1: string;
+    paragraph2: string;
+    paragraph3: string;
+    profilePictureUrl: string;
+}
+
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -136,8 +146,14 @@ export default function SobreAdminPage() {
         async function fetchData() {
             try {
                 setLoading(true);
-                const data = await getAboutData();
-                setAboutData(data);
+                const docRef = doc(db, 'about', 'main');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setAboutData(docSnap.data() as AboutData);
+                } else {
+                     // Você pode definir dados padrão ou lidar com o caso de não existência aqui
+                    console.log("No such document!");
+                }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Falha ao carregar os dados.');
             } finally {

@@ -2,8 +2,10 @@
 'use server';
 
 import { z } from 'zod';
-import { updateAboutData } from '@/services/about';
 import { revalidatePath } from 'next/cache';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres.'),
@@ -73,7 +75,8 @@ export async function updateAboutInfo(prevState: any, formData: FormData): Promi
     }
     
     try {
-        await updateAboutData(validatedFields.data);
+        const aboutDocRef = doc(db, 'about', 'main');
+        await setDoc(aboutDocRef, validatedFields.data, { merge: true });
         
         revalidatePath('/');
         revalidatePath('/sobre');

@@ -7,18 +7,35 @@ import { Button } from '@/components/ui/button';
 import { MoveRight } from 'lucide-react';
 import ProfileCard from '../common/ProfileCard';
 import '@/components/common/ProfileCard.css';
-import { getAboutData, AboutData } from '@/services/about';
 import { Skeleton } from '@/components/ui/skeleton';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
+interface AboutData {
+    mainParagraph: string;
+    profilePictureUrl: string;
+}
 
 export function AboutSection() {
   const [aboutData, setAboutData] = useState<AboutData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAboutData().then(data => {
-      setAboutData(data);
-      setLoading(false);
-    });
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const docRef = doc(db, 'about', 'main');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setAboutData(docSnap.data() as AboutData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch about data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   return (

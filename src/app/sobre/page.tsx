@@ -8,8 +8,17 @@ import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
 import ProfileCard from '@/components/common/ProfileCard';
 import '@/components/common/ProfileCard.css';
-import { getAboutData, AboutData } from '@/services/about';
 import { Skeleton } from '@/components/ui/skeleton';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
+interface AboutData {
+    mainParagraph: string;
+    paragraph1: string;
+    paragraph2: string;
+    paragraph3: string;
+    profilePictureUrl: string;
+}
 
 export default function SobrePage() {
   const [aboutData, setAboutData] = useState<AboutData | null>(null);
@@ -20,8 +29,14 @@ export default function SobrePage() {
     async function fetchData() {
       try {
         setLoading(true);
-        const data = await getAboutData();
-        setAboutData(data);
+        const docRef = doc(db, 'about', 'main');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            setAboutData(docSnap.data() as AboutData);
+        } else {
+            console.log("No such document!");
+             // Optionally set default data if the document doesn't exist
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Falha ao carregar os dados.');
       } finally {
