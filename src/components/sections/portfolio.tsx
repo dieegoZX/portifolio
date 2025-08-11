@@ -8,7 +8,7 @@ import { Code, ExternalLink, MoveRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import CardSwap, { Card } from '@/components/ui/card-swap';
 import { Skeleton } from '@/components/ui/skeleton';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface Project {
@@ -50,10 +50,9 @@ export function PortfolioSection() {
             }
             setLoading(true);
             try {
-                const querySnapshot = await getDocs(collection(db, "projects"));
-                const projectsData = querySnapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() } as Project))
-                    .filter(project => project.status === 'Publicado');
+                const q = query(collection(db, "projects"), where("status", "==", "Publicado"));
+                const querySnapshot = await getDocs(q);
+                const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
                 setProjects(projectsData);
             } catch (error) {
                 console.error("Error fetching projects: ", error);
@@ -89,7 +88,9 @@ export function PortfolioSection() {
             </div>
         </div>
         <div className="w-1/2 h-full relative">
-            {loading ? <CardSwapSkeleton /> : (
+            {loading ? (
+                <CardSwapSkeleton />
+            ) : projects.length > 0 ? (
                 <CardSwap>
                   {projects.map((project) => (
                     <Card key={project.id}>
@@ -118,7 +119,7 @@ export function PortfolioSection() {
                     </Card>
                   ))}
                 </CardSwap>
-            )}
+            ) : null}
         </div>
       </div>
     </section>
