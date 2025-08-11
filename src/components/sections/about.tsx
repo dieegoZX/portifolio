@@ -14,6 +14,9 @@ import { convertImgurLink } from '@/lib/utils';
 interface AboutData {
     mainParagraph: string;
     profilePictureUrl: string;
+    paragraph1: string;
+    paragraph2: string;
+    paragraph3: string;
 }
 
 export function AboutSection() {
@@ -56,7 +59,7 @@ export function AboutSection() {
                   </div>
                 ) : (
                   <p className="max-w-[600px] text-card-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                      {aboutData?.mainParagraph}
+                      {aboutData?.mainParagraph || "Teste de perfil"}
                   </p>
                 )}
                 <Button asChild>
