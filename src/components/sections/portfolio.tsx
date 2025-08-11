@@ -38,20 +38,20 @@ function CardSwapSkeleton() {
     );
 }
 
-export function PortfolioSection() {
+// Componente Wrapper para carregar os dados e mostrar o esqueleto
+function PortfolioSectionLoader() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProjects = async () => {
             if (!db) {
-                 setLoading(false);
-                 return;
+                setLoading(false);
+                return;
             }
             setLoading(true);
             try {
-                const q = query(collection(db, "projects"));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(collection(db, "projects"));
                 const projectsData = querySnapshot.docs
                     .map(doc => ({ id: doc.id, ...doc.data() } as Project))
                     .filter(project => project.status === 'Publicado');
@@ -65,6 +65,13 @@ export function PortfolioSection() {
         fetchProjects();
     }, []);
 
+    return (
+        <PortfolioSection projects={projects} loading={loading} />
+    );
+}
+
+
+function PortfolioSection({ projects, loading }: { projects: Project[], loading: boolean }) {
   return (
     <section id="portfolio" className="w-full py-12 md:py-24 lg:py-32 bg-card">
       <div className="container flex items-center px-4 md:px-6 h-[600px]">
@@ -92,7 +99,7 @@ export function PortfolioSection() {
         <div className="w-1/2 h-full relative">
             {loading ? (
                 <CardSwapSkeleton />
-            ) : projects.length > 0 ? (
+            ) : (
                 <CardSwap>
                   {projects.map((project) => (
                     <Card key={project.id}>
@@ -121,9 +128,11 @@ export function PortfolioSection() {
                     </Card>
                   ))}
                 </CardSwap>
-            ) : null}
+            )}
         </div>
       </div>
     </section>
   );
 }
+
+export { PortfolioSectionLoader as PortfolioSection };
