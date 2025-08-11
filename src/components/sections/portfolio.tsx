@@ -8,7 +8,7 @@ import { Code, ExternalLink, MoveRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import CardSwap, { Card } from '@/components/ui/card-swap';
 import { Skeleton } from '@/components/ui/skeleton';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface Project {
@@ -50,9 +50,11 @@ export function PortfolioSection() {
             }
             setLoading(true);
             try {
-                const q = query(collection(db, "projects"), where("status", "==", "Publicado"));
+                const q = query(collection(db, "projects"));
                 const querySnapshot = await getDocs(q);
-                const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
+                const projectsData = querySnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() } as Project))
+                    .filter(project => project.status === 'Publicado');
                 setProjects(projectsData);
             } catch (error) {
                 console.error("Error fetching projects: ", error);
@@ -73,7 +75,7 @@ export function PortfolioSection() {
               Uma seleção de projetos que demonstram minhas habilidades em desenvolvimento front-end.
             </p>
              <Button asChild>
-                <Link href="#portfolio">
+                <Link href="#contact">
                     Ver todos os projetos <MoveRight className="ml-2 h-4 w-4" />
                 </Link>
              </Button>
