@@ -20,14 +20,14 @@ const projectSchema = z.object({
     title: z.string().min(2, "Título é obrigatório."),
     description: z.string().min(10, "Descrição é obrigatória."),
     image: z.string().url("URL da imagem inválida."),
-    tags: z.string().min(1, "Adicione pelo menos uma tag.").transform(val => val.split(',').map(tag => tag.trim())),
+    tags: z.string().min(1, "Adicione pelo menos uma tag."),
     liveUrl: z.string().url("URL do projeto inválida."),
     codeUrl: z.string().url("URL do código inválida."),
     aiHint: z.string().optional(),
     status: z.enum(['Publicado', 'Rascunho']),
 });
 
-type ProjectFormValues = z.infer<typeof projectSchema> & { tags: string };
+type ProjectFormValues = z.infer<typeof projectSchema>;
 
 export default function NovoProjetoPage() {
     const router = useRouter();
@@ -35,7 +35,8 @@ export default function NovoProjetoPage() {
     const { register, handleSubmit, formState: { errors, isSubmitting }, setValue } = useForm<ProjectFormValues>({
         resolver: zodResolver(projectSchema),
         defaultValues: {
-            status: 'Rascunho'
+            status: 'Rascunho',
+            tags: ''
         }
     });
 

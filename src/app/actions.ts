@@ -146,7 +146,13 @@ const projectSchema = z.object({
     title: z.string().min(2, "Título é obrigatório."),
     description: z.string().min(10, "Descrição é obrigatória."),
     image: z.string().url("URL da imagem inválida."),
-    tags: z.string().min(1, "Adicione pelo menos uma tag.").transform(val => val.split(',').map(tag => tag.trim())),
+    tags: z.union([
+        z.string(),
+        z.array(z.string())
+    ]).transform(val => {
+        if (Array.isArray(val)) return val;
+        return val.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+    }),
     liveUrl: z.string().url("URL do projeto inválida."),
     codeUrl: z.string().url("URL do código inválida."),
     aiHint: z.string().optional(),
