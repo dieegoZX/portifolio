@@ -23,10 +23,9 @@ interface Project {
   status: 'Publicado' | 'Rascunho';
 }
 
-
 const technologies = [
     'React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Firebase', 'Node.js'
-]
+];
 
 function CardSwapSkeleton() {
     return (
@@ -36,7 +35,7 @@ function CardSwapSkeleton() {
                 <Skeleton className="absolute top-1/2 left-1/2 -translate-x-[calc(50%-60px)] -translate-y-[calc(50%+70px)] w-full h-full rounded-xl opacity-50" />
             </div>
         </div>
-    )
+    );
 }
 
 export function PortfolioSection() {
@@ -45,7 +44,10 @@ export function PortfolioSection() {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            if (!db) return;
+            if (!db) {
+                 setLoading(false);
+                 return;
+            }
             setLoading(true);
             try {
                 const querySnapshot = await getDocs(collection(db, "projects"));
