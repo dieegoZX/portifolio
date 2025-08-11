@@ -1,4 +1,3 @@
-
 import { initializeApp, getApp, getApps, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -12,8 +11,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Use um padrão singleton para garantir que apenas uma instância seja criada.
-const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Singleton pattern to ensure only one instance of Firebase is initialized.
+function getFirebaseApp(): FirebaseApp {
+  if (!getApps().length) {
+    return initializeApp(firebaseConfig);
+  }
+  return getApp();
+}
+
+const app: FirebaseApp = getFirebaseApp();
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 
