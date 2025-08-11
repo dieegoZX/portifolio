@@ -11,6 +11,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
+// O valor padrão do contexto é undefined para podermos verificar se o provider foi usado.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -25,26 +26,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    // Limpa a inscrição ao desmontar
+    // Limpa a inscrição ao desmontar o componente para evitar vazamentos de memória.
     return () => unsubscribe();
   }, []);
   
   const signOut = async () => {
-    // O signOut também usa a mesma instância 'auth'
+    // O signOut também usa a mesma instância 'auth' para garantir consistência.
     await firebaseSignOut(auth);
-    // O observador onAuthStateChanged cuidará de atualizar o estado do usuário para null
+    // O observador onAuthStateChanged cuidará de atualizar o estado do usuário para null.
   };
+  
+  const value = { user, loading, signOut };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 }
 
+// Hook customizado para consumir o contexto de autenticação.
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
+    // Isso garante que o hook só possa ser usado dentro de um AuthProvider.
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
