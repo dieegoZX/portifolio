@@ -98,7 +98,7 @@ export function PortfolioSection() {
                             <h3 className="text-2xl font-semibold leading-none tracking-tight mb-2 text-card-foreground">{project.title}</h3>
                             <p className="text-sm text-muted-foreground mb-4 flex-grow">{project.description}</p>
                              <div className="flex flex-wrap gap-2 mb-4">
-                                {project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                                {Array.isArray(project.tags) && project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                              </div>
                           <div className="flex justify-between mt-auto">
                             <Button asChild variant="outline">

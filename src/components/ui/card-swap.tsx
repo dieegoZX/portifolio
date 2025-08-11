@@ -124,6 +124,8 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (refs.length === 0) return;
+    
     const total = refs.length;
     refs.forEach((r, i) =>
       placeNow(
