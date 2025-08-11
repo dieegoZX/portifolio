@@ -24,7 +24,10 @@ const projectSchema = z.object({
     title: z.string().min(2, "Título é obrigatório."),
     description: z.string().min(10, "Descrição é obrigatória."),
     image: z.string().url("URL da imagem inválida."),
-    tags: z.union([z.string(), z.array(z.string())]).transform(val => {
+    tags: z.union([
+        z.string().min(1, "Adicione pelo menos uma tag."),
+        z.array(z.string()).min(1, "Adicione pelo menos uma tag.")
+    ]).transform(val => {
         if (Array.isArray(val)) return val;
         return val.split(',').map(tag => tag.trim());
     }),
@@ -50,11 +53,13 @@ export default function EditarProjetoPage({ params }: { params: { id: string } }
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                // O schema agora espera um array, mas o formulário precisa de uma string.
+                // Convertemos o array de tags para uma string para popular o input.
                 const transformedData = {
                     ...data,
                     tags: Array.isArray(data.tags) ? data.tags.join(', ') : data.tags,
                 };
-                reset(transformedData as any);
+                reset(transformedData as any); // Resetamos o form com a string
             } else {
                 toast({ variant: 'destructive', title: 'Erro', description: 'Projeto não encontrado.' });
                 router.push('/admin/projetos');
@@ -64,6 +69,7 @@ export default function EditarProjetoPage({ params }: { params: { id: string } }
     }, [params.id, reset, router, toast]);
 
     const onSubmit: SubmitHandler<ProjectFormValues> = async (data) => {
+        // A validação do Zod já terá transformado a string de tags em um array.
         const result = await saveProject(params.id, data as any);
         if (result?.success === false) {
              toast({ variant: "destructive", title: "Erro", description: result.message });
