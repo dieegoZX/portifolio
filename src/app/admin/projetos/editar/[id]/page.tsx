@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { saveProject } from '@/app/actions';
+import { saveProject, ProjectData } from '@/lib/firebase-services';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -61,12 +61,14 @@ export default function EditarProjetoPage({ params }: { params: { id: string } }
     }, [params.id, reset, router, toast]);
 
     const onSubmit: SubmitHandler<ProjectFormValues> = async (data) => {
-        const result = await saveProject(params.id, data as any);
-        if (result?.success === false) {
-             toast({ variant: "destructive", title: "Erro", description: result.message });
-        } else {
-             toast({ title: "Sucesso!", description: "Projeto atualizado com sucesso." });
+        try {
+            await saveProject(params.id, data as any);
+            toast({ title: "Sucesso!", description: "Projeto atualizado com sucesso." });
             router.push('/admin/projetos');
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
+            toast({ variant: "destructive", title: "Erro", description: `Erro ao salvar projeto: ${errorMessage}` });
+            console.error("Error saving project:", error);
         }
     };
     

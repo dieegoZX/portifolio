@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { saveLandingPage } from '@/app/actions';
+import { saveLandingPage, LandingPageData } from '@/lib/firebase-services';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -38,12 +38,14 @@ export default function NovaLandingPage() {
     });
 
     const onSubmit: SubmitHandler<LandingPageFormValues> = async (data) => {
-        const result = await saveLandingPage(null, data);
-        if (result?.success === false) {
-             toast({ variant: "destructive", title: "Erro", description: result.message });
-        } else {
-             toast({ title: "Sucesso!", description: "Landing Page criada com sucesso." });
+        try {
+            await saveLandingPage(null, data as LandingPageData);
+            toast({ title: "Sucesso!", description: "Landing Page criada com sucesso." });
             router.push('/admin/landing-pages');
+        } catch (error) {
+             const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
+             toast({ variant: "destructive", title: "Erro", description: errorMessage });
+             console.error(error);
         }
     };
 

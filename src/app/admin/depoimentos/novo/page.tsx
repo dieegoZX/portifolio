@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { saveTestimonial } from '@/app/actions';
+import { saveTestimonial, TestimonialData } from '@/lib/firebase-services';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -39,19 +39,21 @@ export default function NovoDepoimentoPage() {
     });
 
     const onSubmit: SubmitHandler<TestimonialFormValues> = async (data) => {
-        const result = await saveTestimonial(null, data);
-        if (result?.success === false) {
-             toast({
-                variant: "destructive",
-                title: "Erro",
-                description: result.message,
-            });
-        } else {
-             toast({
+        try {
+            await saveTestimonial(null, data as TestimonialData);
+            toast({
                 title: "Sucesso!",
                 description: "Depoimento criado com sucesso.",
             });
             router.push('/admin/depoimentos');
+        } catch (error) {
+             const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
+            toast({
+                variant: "destructive",
+                title: "Erro ao criar",
+                description: errorMessage,
+            });
+            console.error(error);
         }
     };
 
