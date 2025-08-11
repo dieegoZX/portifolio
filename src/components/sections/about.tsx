@@ -59,7 +59,7 @@ export function AboutSection() {
                   </div>
                 ) : (
                   <p className="max-w-[600px] text-card-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                      {aboutData?.mainParagraph || "Teste de perfil"}
+                      {aboutData?.paragraph1 || "Primeiro parágrafo sobre mim."}
                   </p>
                 )}
                 <Button asChild>
