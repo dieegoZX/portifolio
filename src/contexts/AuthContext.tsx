@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { onAuthStateChanged, User, signOut as firebaseSignOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth } from '@/lib/firebase'; // Importa a instância 'auth' já inicializada
 
 interface AuthContextType {
   user: User | null;
@@ -18,21 +18,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // onAuthStateChanged is the recommended way to get the current user.
-    // It sets up an observer that runs whenever the user's sign-in state changes.
+    // onAuthStateChanged usa a instância 'auth' importada para observar as mudanças.
+    // Isso garante que estamos usando o mesmo objeto de autenticação em toda a aplicação.
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
 
-    // Cleanup subscription on unmount
+    // Limpa a inscrição ao desmontar
     return () => unsubscribe();
   }, []);
   
   const signOut = async () => {
-    // signOut is handled by the firebase SDK
+    // O signOut também usa a mesma instância 'auth'
     await firebaseSignOut(auth);
-    // The onAuthStateChanged observer will automatically update the user state to null
+    // O observador onAuthStateChanged cuidará de atualizar o estado do usuário para null
   };
 
   return (
