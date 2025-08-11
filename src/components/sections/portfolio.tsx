@@ -8,7 +8,7 @@ import { Code, ExternalLink, MoveRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import CardSwap, { Card } from '@/components/ui/card-swap';
 import { Skeleton } from '@/components/ui/skeleton';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface Project {
@@ -38,8 +38,7 @@ function CardSwapSkeleton() {
     );
 }
 
-// Componente Wrapper para carregar os dados e mostrar o esqueleto
-function PortfolioSectionLoader() {
+function PortfolioSection() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -65,13 +64,6 @@ function PortfolioSectionLoader() {
         fetchProjects();
     }, []);
 
-    return (
-        <PortfolioSection projects={projects} loading={loading} />
-    );
-}
-
-
-function PortfolioSection({ projects, loading }: { projects: Project[], loading: boolean }) {
   return (
     <section id="portfolio" className="w-full py-12 md:py-24 lg:py-32 bg-card">
       <div className="container flex items-center px-4 md:px-6 h-[600px]">
@@ -100,34 +92,40 @@ function PortfolioSection({ projects, loading }: { projects: Project[], loading:
             {loading ? (
                 <CardSwapSkeleton />
             ) : (
-                <CardSwap>
-                  {projects.map((project) => (
-                    <Card key={project.id}>
-                        <div className="flex flex-col h-full p-6">
-                            <div className="relative h-48 w-full mb-4">
-                               <Image src={project.image} alt={project.title} fill objectFit="cover" className="rounded-lg" data-ai-hint={project.aiHint} />
+                projects.length > 0 ? (
+                    <CardSwap>
+                      {projects.map((project) => (
+                        <Card key={project.id}>
+                            <div className="flex flex-col h-full p-6">
+                                <div className="relative h-48 w-full mb-4">
+                                   <Image src={project.image} alt={project.title} fill objectFit="cover" className="rounded-lg" data-ai-hint={project.aiHint} />
+                                </div>
+                                <h3 className="text-2xl font-semibold leading-none tracking-tight mb-2 text-card-foreground">{project.title}</h3>
+                                <p className="text-sm text-muted-foreground mb-4 flex-grow">{project.description}</p>
+                                 <div className="flex flex-wrap gap-2 mb-4">
+                                    {Array.isArray(project.tags) && project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                                 </div>
+                              <div className="flex justify-between mt-auto">
+                                <Button asChild variant="outline">
+                                  <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                                    <ExternalLink className="mr-2 h-4 w-4" /> Ver Projeto
+                                  </Link>
+                                </Button>
+                                <Button asChild variant="ghost">
+                                  <Link href={project.codeUrl} target="_blank" rel="noopener noreferrer">
+                                    <Code className="mr-2 h-4 w-4" /> Código
+                                  </Link>
+                                </Button>
+                              </div>
                             </div>
-                            <h3 className="text-2xl font-semibold leading-none tracking-tight mb-2 text-card-foreground">{project.title}</h3>
-                            <p className="text-sm text-muted-foreground mb-4 flex-grow">{project.description}</p>
-                             <div className="flex flex-wrap gap-2 mb-4">
-                                {Array.isArray(project.tags) && project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-                             </div>
-                          <div className="flex justify-between mt-auto">
-                            <Button asChild variant="outline">
-                              <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="mr-2 h-4 w-4" /> Ver Projeto
-                              </Link>
-                            </Button>
-                            <Button asChild variant="ghost">
-                              <Link href={project.codeUrl} target="_blank" rel="noopener noreferrer">
-                                <Code className="mr-2 h-4 w-4" /> Código
-                              </Link>
-                            </Button>
-                          </div>
-                        </div>
-                    </Card>
-                  ))}
-                </CardSwap>
+                        </Card>
+                      ))}
+                    </CardSwap>
+                 ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-muted-foreground">Nenhum projeto publicado encontrado.</p>
+                    </div>
+                )
             )}
         </div>
       </div>
@@ -135,4 +133,4 @@ function PortfolioSection({ projects, loading }: { projects: Project[], loading:
   );
 }
 
-export { PortfolioSectionLoader as PortfolioSection };
+export { PortfolioSection };
