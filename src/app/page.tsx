@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="fixed inset-0 -z-10">
-        <LetterGlitch outerVignette={false} />
+        <LetterGlitch outerVignette={false} glitchColors={['#006400', '#004d00', '#003300']} />
       </div>
       <AppHeader />
       <main className="flex-1">
