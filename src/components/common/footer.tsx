@@ -18,7 +18,7 @@ export function AppFooter() {
           {isClient ? `© ${new Date().getFullYear()} Diego Ruan. Todos os direitos reservados.` : '\u00A0'}
         </p>
         <div className="flex items-center gap-4">
-          <Link href="#" target="_blank" rel="noreferrer" aria-label="Github">
+          <Link href="https://github.com/dieegoZX/Meu-Portifolio" target="_blank" rel="noreferrer" aria-label="Github">
             <Github className="h-6 w-6 text-muted-foreground transition-colors hover:text-primary" />
           </Link>
           <Link href="#" target="_blank" rel="noreferrer" aria-label="LinkedIn">
