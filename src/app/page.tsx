@@ -1,3 +1,4 @@
+
 import { AppHeader } from '@/components/common/header';
 import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
@@ -8,6 +9,8 @@ import { LandingPagesSection } from '@/components/sections/landing-pages';
 import { TrafficManagementSection } from '@/components/sections/traffic-management';
 import { TestimonialsSection } from '@/components/sections/testimonials';
 import { ContactSection } from '@/components/sections/contact';
+
+export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
