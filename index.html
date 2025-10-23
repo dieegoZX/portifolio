@@ -810,7 +810,7 @@
                         <div class="code-dot"></div>
                         <div class="code-dot"></div>
                     </div>
-                    <div class="code-content">
+                <div class="code-content" id="code-animation">
                         <div class="code-line"><span class="code-keyword">const</span> <span class="code-function">developer</span> = {</div>
                         <div class="code-line">  <span class="code-string">name</span>: <span class="code-string">'Diego Ruan'</span>,</div>
                         <div class="code-line">  <span class="code-string">role</span>: <span class="code-string">'Frontend Developer'</span>,</div>
@@ -1200,6 +1200,90 @@
             
             setTimeout(typeWriter, 1500);
         }
+    </script>
+
+    <script>
+        // Typing effect for code
+        document.addEventListener('DOMContentLoaded', () => {
+            const codeContainer = document.getElementById('code-animation');
+            if (!codeContainer) return; // Exit if the element doesn't exist
+
+            const codeLines = Array.from(codeContainer.querySelectorAll('.code-line'));
+            const originalLinesHTML = codeLines.map(line => line.innerHTML);
+            const typingSpeed = 40; // Typing speed in milliseconds
+            const lineDelay = 400;  // Delay between lines in milliseconds
+
+            // Inject cursor styles into the head
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .typing-cursor {
+                    display: inline-block;
+                    width: 8px; /* Width of the cursor */
+                    background-color: var(--primary);
+                    animation: blink 0.8s infinite;
+                    margin-left: 3px;
+                    vertical-align: middle;
+                    height: 1.1em; /* Adjust height to better match font */
+                }
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Clear the container to start the animation
+            codeContainer.innerHTML = '';
+
+            async function startTypingAnimation() {
+                for (let i = 0; i < originalLinesHTML.length; i++) {
+                    const lineEl = document.createElement('div');
+                    lineEl.className = 'code-line';
+                    codeContainer.appendChild(lineEl);
+
+                    const html = originalLinesHTML[i];
+                    let currentHTML = '';
+
+                    for (let j = 0; j < html.length; j++) {
+                        let char = html[j];
+
+                        // If it's the start of an HTML tag, find the end and add the whole tag at once
+                        if (char === '<') {
+                            const tagEndIndex = html.indexOf('>', j);
+                            if (tagEndIndex !== -1) {
+                                currentHTML += html.substring(j, tagEndIndex + 1);
+                                j = tagEndIndex; // Move index past the tag
+                            }
+                        } else {
+                            currentHTML += char;
+                        }
+
+                        // Update the line content with a blinking cursor at the end
+                        lineEl.innerHTML = currentHTML + '<span class="typing-cursor"></span>';
+
+                        // Wait for the typing speed delay
+                        await new Promise(resolve => setTimeout(resolve, typingSpeed));
+                    }
+
+                    // Once the line is fully typed, remove the cursor from it
+                    lineEl.innerHTML = currentHTML;
+
+                    // Wait before starting the next line
+                    if (i < originalLinesHTML.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, lineDelay));
+                    }
+                }
+
+                // After all lines are typed, add a persistent cursor to the last line
+                const lastLine = codeContainer.querySelector('.code-line:last-child');
+                if (lastLine) {
+                    lastLine.innerHTML += '<span class="typing-cursor"></span>';
+                }
+            }
+
+            // Delay the animation to start after the page load and other animations
+            setTimeout(startTypingAnimation, 2000);
+        });
     </script>
 </body>
 </html>
