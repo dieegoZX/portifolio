@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diego Ruan - Frontend Developer</title>
-    <meta name="description" content="Desenvolvedor Full Stack especializado em criar soluções web escaláveis e modernas.">
-    <meta name="keywords" content="desenvolvedor, full stack, web developer, javascript, react, node.js">
-    
+    <meta name="description" content="Desenvolvedor Frontend especializado em criar soluções web escaláveis e modernas.">
+    <meta name="keywords" content="desenvolvedor, frontend, web developer, javascript, react">
+
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         /* ===== DESIGN SYSTEM ===== */
         :root {
@@ -34,17 +34,17 @@
             --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         html {
             scroll-behavior: smooth;
         }
-        
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: var(--dark);
@@ -52,21 +52,21 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-        
+
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 10px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: var(--dark-lighter);
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: var(--primary);
             border-radius: 5px;
         }
-        
+
         /* ===== LOADING SCREEN ===== */
         .loader-wrapper {
             position: fixed;
@@ -81,12 +81,12 @@
             z-index: 9999;
             transition: opacity 0.5s ease;
         }
-        
+
         .loader-wrapper.fade-out {
             opacity: 0;
             pointer-events: none;
         }
-        
+
         .loader {
             width: 60px;
             height: 60px;
@@ -95,11 +95,11 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
+
         /* ===== NAVIGATION ===== */
         nav {
             position: fixed;
@@ -111,12 +111,12 @@
             z-index: 1000;
             transition: var(--transition);
         }
-        
+
         nav.scrolled {
             padding: 0.5rem 0;
             box-shadow: var(--shadow);
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -125,7 +125,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
@@ -135,19 +135,19 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .logo span {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-        
+
         .nav-links {
             display: flex;
             list-style: none;
             gap: 2rem;
         }
-        
+
         .nav-links a {
             color: var(--text);
             text-decoration: none;
@@ -155,7 +155,7 @@
             transition: var(--transition);
             font-weight: 500;
         }
-        
+
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -166,17 +166,17 @@
             background: var(--primary);
             transition: var(--transition);
         }
-        
+
         .nav-links a:hover::after {
             width: 100%;
         }
-        
+
         .menu-toggle {
             display: none;
             flex-direction: column;
             cursor: pointer;
         }
-        
+
         .menu-toggle span {
             width: 25px;
             height: 3px;
@@ -184,7 +184,7 @@
             margin: 3px 0;
             transition: var(--transition);
         }
-        
+
         /* ===== HERO SECTION ===== */
         .hero {
             min-height: 100vh;
@@ -193,7 +193,7 @@
             position: relative;
             padding: 6rem 0 2rem;
         }
-        
+
         .hero-bg {
             position: absolute;
             top: 0;
@@ -203,7 +203,7 @@
             overflow: hidden;
             opacity: 0.1;
         }
-        
+
         .hero-bg::before {
             content: '';
             position: absolute;
@@ -215,7 +215,7 @@
             right: -200px;
             filter: blur(80px);
         }
-        
+
         .hero-bg::after {
             content: '';
             position: absolute;
@@ -227,7 +227,7 @@
             left: -150px;
             filter: blur(60px);
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 1;
@@ -239,38 +239,38 @@
             gap: 4rem;
             align-items: center;
         }
-        
+
         .hero-text h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
             margin-bottom: 1rem;
             line-height: 1.1;
         }
-        
+
         .hero-text .highlight {
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .hero-text .subtitle {
             font-size: 1.2rem;
             color: var(--text-muted);
             margin-bottom: 2rem;
         }
-        
+
         .hero-text p {
             font-size: 1.1rem;
             margin-bottom: 2rem;
             color: var(--text);
         }
-        
+
         .hero-buttons {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
         }
-        
+
         .btn {
             padding: 0.8rem 2rem;
             border: none;
@@ -284,32 +284,32 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-primary {
             background: var(--gradient);
             color: white;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
         }
-        
+
         .btn-secondary {
             background: transparent;
             color: var(--primary);
             border: 2px solid var(--primary);
         }
-        
+
         .btn-secondary:hover {
             background: var(--primary);
             color: var(--dark);
         }
-        
+
         .hero-image {
             position: relative;
         }
-        
+
         .code-container {
             background: var(--dark-lighter);
             border: 1px solid var(--border);
@@ -320,55 +320,55 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .code-header {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .code-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
         }
-        
+
         .code-dot:nth-child(1) { background: #FF5F56; }
         .code-dot:nth-child(2) { background: #FFBD2E; }
         .code-dot:nth-child(3) { background: #27C93F; }
-        
+
         .code-content {
             color: var(--text-muted);
         }
-        
+
         .code-line {
             margin: 0.5rem 0;
         }
-        
+
         .code-keyword { color: #FF79C6; }
         .code-string { color: #50FA7B; }
         .code-function { color: #8BE9FD; }
         .code-comment { color: #6272A4; font-style: italic; }
-        
+
         /* ===== SECTIONS ===== */
         section {
             padding: 5rem 0;
             position: relative;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
-        
+
         .section-title {
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 3rem;
             position: relative;
         }
-        
+
         .section-title::after {
             content: '';
             position: absolute;
@@ -380,7 +380,7 @@
             background: var(--gradient);
             border-radius: 2px;
         }
-        
+
         /* ===== ABOUT SECTION ===== */
         .about-content {
             display: grid;
@@ -388,17 +388,17 @@
             gap: 3rem;
             align-items: center;
         }
-        
+
         .about-image {
             position: relative;
         }
-        
+
         .about-image img {
             width: 100%;
             border-radius: 10px;
             border: 2px solid var(--border);
         }
-        
+
         .about-image::before {
             content: '';
             position: absolute;
@@ -411,25 +411,25 @@
             z-index: -1;
             opacity: 0.5;
         }
-        
+
         .about-text h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--primary);
         }
-        
+
         .about-text p {
             margin-bottom: 1.5rem;
             color: var(--text);
         }
-        
+
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
             margin-top: 2rem;
         }
-        
+
         .stat-card {
             background: var(--dark-lighter);
             padding: 1.5rem;
@@ -437,33 +437,33 @@
             text-align: center;
             border: 1px solid var(--border);
         }
-        
+
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-label {
             color: var(--text-muted);
             font-size: 0.9rem;
         }
-        
+
         /* ===== SKILLS SECTION ===== */
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
-        
+
         .skill-category {
             background: var(--dark-lighter);
             padding: 2rem;
             border-radius: 10px;
             border: 1px solid var(--border);
         }
-        
+
         .skill-category h3 {
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
@@ -472,11 +472,11 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .skill-list {
             list-style: none;
         }
-        
+
         .skill-item {
             padding: 0.8rem 0;
             border-bottom: 1px solid var(--border);
@@ -484,22 +484,22 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .skill-item:last-child {
             border-bottom: none;
         }
-        
+
         .skill-name {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .skill-level {
             display: flex;
             gap: 0.3rem;
         }
-        
+
         .skill-dot {
             width: 8px;
             height: 8px;
@@ -507,18 +507,18 @@
             background: var(--border);
             transition: var(--transition);
         }
-        
+
         .skill-dot.filled {
             background: var(--primary);
         }
-        
+
         /* ===== PROJECTS SECTION ===== */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
-        
+
         .project-card {
             background: var(--dark-lighter);
             border-radius: 10px;
@@ -527,29 +527,29 @@
             transition: var(--transition);
             position: relative;
         }
-        
+
         .project-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow);
         }
-        
+
         .project-image {
             height: 200px;
             overflow: hidden;
             position: relative;
         }
-        
+
         .project-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
         }
-        
+
         .project-card:hover .project-image img {
             transform: scale(1.1);
         }
-        
+
         .project-overlay {
             position: absolute;
             top: 0;
@@ -563,17 +563,17 @@
             opacity: 0;
             transition: var(--transition);
         }
-        
+
         .project-card:hover .project-overlay {
             opacity: 1;
         }
-        
+
         .project-tech {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
-        
+
         .tech-tag {
             background: var(--primary);
             color: var(--dark);
@@ -582,27 +582,27 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
+
         .project-content {
             padding: 1.5rem;
         }
-        
+
         .project-title {
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
             color: var(--text);
         }
-        
+
         .project-description {
             color: var(--text-muted);
             margin-bottom: 1rem;
         }
-        
+
         .project-links {
             display: flex;
             gap: 1rem;
         }
-        
+
         .project-link {
             color: var(--primary);
             text-decoration: none;
@@ -612,35 +612,35 @@
             font-size: 0.9rem;
             transition: var(--transition);
         }
-        
+
         .project-link:hover {
             gap: 0.5rem;
         }
-        
+
         /* ===== CONTACT SECTION ===== */
         .contact-content {
             max-width: 600px;
             margin: 0 auto;
             text-align: center;
         }
-        
+
         .contact-form {
             margin-top: 2rem;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
-        
+
         .form-group {
             text-align: left;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             color: var(--text-muted);
         }
-        
+
         .form-group input,
         .form-group textarea {
             width: 100%;
@@ -652,18 +652,18 @@
             font-family: inherit;
             transition: var(--transition);
         }
-        
+
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
         }
-        
+
         .form-group textarea {
             resize: vertical;
             min-height: 120px;
         }
-        
+
         /* ===== FOOTER ===== */
         footer {
             background: var(--dark-lighter);
@@ -671,30 +671,30 @@
             text-align: center;
             border-top: 1px solid var(--border);
         }
-        
+
         .social-links {
             display: flex;
             justify-content: center;
             gap: 2rem;
             margin-bottom: 2rem;
         }
-        
+
         .social-link {
             color: var(--text-muted);
             font-size: 1.5rem;
             transition: var(--transition);
         }
-        
+
         .social-link:hover {
             color: var(--primary);
             transform: translateY(-3px);
         }
-        
+
         .footer-text {
             color: var(--text-muted);
             font-size: 0.9rem;
         }
-        
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .nav-links {
@@ -709,33 +709,33 @@
                 padding: 2rem;
                 transition: var(--transition);
             }
-            
+
             .nav-links.active {
                 right: 0;
             }
-            
+
             .menu-toggle {
                 display: flex;
             }
-            
+
             .hero-content {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            
+
             .about-content {
                 grid-template-columns: 1fr;
             }
-            
+
             .stats {
                 grid-template-columns: 1fr;
             }
-            
+
             .hero-buttons {
                 justify-content: center;
             }
         }
-        
+
         /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp {
             from {
@@ -747,12 +747,12 @@
                 transform: translateY(0);
             }
         }
-        
+
         .fade-in-up {
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
         }
-        
+
         .fade-in-up.delay-1 { animation-delay: 0.1s; }
         .fade-in-up.delay-2 { animation-delay: 0.2s; }
         .fade-in-up.delay-3 { animation-delay: 0.3s; }
@@ -776,6 +776,7 @@
                 <li><a href="#about">Sobre</a></li>
                 <li><a href="#skills">Habilidades</a></li>
                 <li><a href="#projects">Projetos</a></li>
+                <li><a href="#testimonials">Depoimentos</a></li>
                 <li><a href="#contact">Contato</a></li>
             </ul>
             <div class="menu-toggle" id="menuToggle">
@@ -814,7 +815,7 @@
                         <div class="code-line"><span class="code-keyword">const</span> <span class="code-function">developer</span> = {</div>
                         <div class="code-line">  <span class="code-string">name</span>: <span class="code-string">'Diego Ruan'</span>,</div>
                         <div class="code-line">  <span class="code-string">role</span>: <span class="code-string">'Frontend Developer'</span>,</div>
-                        <div class="code-line">  <span class="code-string">skills</span>: [<span class="code-string">'JavaScript'</span>, <span class="code-string">'React'</span>, <span class="code-string">'Node.js'</span>, <span class="code-string">'HTML'</span>, <span class="code-string">'css'</span>],</div>
+                        <div class="code-line">  <span class="code-string">skills</span>: [<span class="code-string">'JavaScript'</span>, <span class="code-string">'React'</span>, <span class="code-string">'HTML'</span>, <span class="code-string">'css'</span>],</div>
                         <div class="code-line">  <span class="code-string">passion</span>: <span class="code-string">'Building amazing things'</span>,</div>
                         <div class="code-line">  <span class="code-comment">// Always learning, always growing</span></div>
                         <div class="code-line">};</div>
@@ -830,13 +831,13 @@
             <h2 class="section-title fade-in-up">Sobre Mim</h2>
             <div class="about-content">
                 <div class="about-image fade-in-up delay-1">
-                    <img src="https://i.imgur.com/Gscx06V.png" alt="Diego Ruan">
+                    <img src="https://i.imgur.com/2MIbVE8.png" alt="Diego Ruan">
                 </div>
                 <div class="about-text fade-in-up delay-2">
                     <h3>Transformando Ideias em Realidade Digital</h3>
-                    <p>Com mais de 5 anos de experiência no desenvolvimento web, tenho dedicado minha carreira à criação de soluções inovadoras que resolvem problemas reais. Minha jornada me levou a dominar tanto o frontend quanto o backend, permitindo-me construir aplicações completas e robustas.</p>
+                    <p>Com mais de 5 anos de experiência no desenvolvimento web, tenho dedicado minha carreira à criação de soluções inovadoras que resolvem problemas reais. Minha jornada me levou a dominar o frontend, permitindo-me construir aplicações completas e robustas.</p>
                     <p>Acredito firmemente que código limpo, arquitetura bem planejada e experiência do usuário excepcional são os pilares de qualquer projeto de sucesso. Estou sempre em busca de novos desafios que me permitam crescer profissionalmente e contribuir para o sucesso da equipe.</p>
-                    
+
                     <div class="stats">
                         <div class="stat-card">
                             <div class="stat-number">50+</div>
@@ -939,8 +940,6 @@
                         <div class="project-overlay">
                             <div class="project-tech">
                                 <span class="tech-tag">React</span>
-                                <span class="tech-tag">Node.js</span>
-                                <span class="tech-tag">MongoDB</span>
                             </div>
                         </div>
                     </div>
@@ -961,7 +960,6 @@
                         <div class="project-overlay">
                             <div class="project-tech">
                                 <span class="tech-tag">Vue.js</span>
-                                <span class="tech-tag">Firebase</span>
                             </div>
                         </div>
                     </div>
@@ -1044,8 +1042,6 @@
                         <img src="https://i.imgur.com/4bt0JL8.png" alt="Concessionária">
                         <div class="project-overlay">
                             <div class="project-tech">
-                                <span class="tech-tag">Laravel</span>
-                                <span class="tech-tag">MySQL</span>
                             </div>
                         </div>
                     </div>
@@ -1063,13 +1059,25 @@
         </div>
     </section>
 
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <div class="container">
+            <h2 class="section-title fade-in-up">Depoimentos</h2>
+            <div class="contact-content fade-in-up delay-1">
+                <p>Em breve, depoimentos de clientes satisfeitos.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact">
         <div class="container">
             <h2 class="section-title fade-in-up">Entre em Contato</h2>
             <div class="contact-content fade-in-up delay-1">
                 <p>Tem um projeto em mente? Gostaria de discutir oportunidades? Vamos conversar!</p>
-                <form class="contact-form" id="contactForm">
+                <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+                    <input type="hidden" name="access_key" value="d67caa9f-db2c-4c16-b49d-5ebc4014cbca">
+                    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
                     <div class="form-group">
                         <label for="name">Nome</label>
                         <input type="text" id="name" name="name" required>
@@ -1153,22 +1161,6 @@
             observer.observe(el);
         });
 
-        // Contact Form Handler
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            
-            // Here you would normally send the data to a server
-            // For demo purposes, we'll just show an alert
-            alert(`Mensagem enviada com sucesso!\n\nNome: ${data.name}\nE-mail: ${data.email}\nMensagem: ${data.message}`);
-            
-            // Reset form
-            e.target.reset();
-        });
-
         // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1189,7 +1181,7 @@
             const text = heroText.innerHTML;
             heroText.innerHTML = '';
             let index = 0;
-            
+
             function typeWriter() {
                 if (index < text.length) {
                     heroText.innerHTML += text.charAt(index);
@@ -1197,7 +1189,7 @@
                     setTimeout(typeWriter, 50);
                 }
             }
-            
+
             setTimeout(typeWriter, 1500);
         }
     </script>
