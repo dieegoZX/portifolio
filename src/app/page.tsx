@@ -1,4 +1,6 @@
 
+export const dynamic = 'force-dynamic';
+
 import { AppHeader } from '@/components/common/header';
 import { AppFooter } from '@/components/common/footer';
 import LetterGlitch from '@/components/common/letter-glitch';
