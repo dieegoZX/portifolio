@@ -36,6 +36,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Cloudflare - Ignore Next.js cache to avoid file size limits
-.next/cache
