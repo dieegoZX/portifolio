@@ -1,0 +1,16 @@
+{
+  "node": {
+    "60c391ee343f36cd526cc1a688727d788f347859dd": {
+      "workers": {
+        "app/admin/landing-pages/novo/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/landing-pages/novo/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/landing-pages/novo/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}
