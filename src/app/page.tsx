@@ -10,8 +10,6 @@ import { TrafficManagementSection } from '@/components/sections/traffic-manageme
 import { TestimonialsSection } from '@/components/sections/testimonials';
 import { ContactSection } from '@/components/sections/contact';
 
-export const dynamic = 'force-dynamic';
-
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
