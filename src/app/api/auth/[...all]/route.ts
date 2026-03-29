@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { auth } from "@/lib/auth"; // import o arquivo que criamos
 import { toNextJsHandler } from "better-auth/next-js";
 

@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { db } from "@/db";
 import { projects, posts } from "@/db/schema";
 import { GlassCard } from "@/components/glass-card";
